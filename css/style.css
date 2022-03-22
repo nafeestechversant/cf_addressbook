@@ -1,0 +1,46 @@
+.container-fluid {
+    padding-left: 0px; 
+    padding-right: 0px;
+}
+.bg-blue {    
+    background-color: #337AB7 !important;  
+}
+.bg-gradient-primary {
+    background-color: #D8E5F1;
+    background-image:none;
+}
+.text-white-600 {
+    color: #fff!important;
+}
+.nav-item i {
+    color: #fff;
+}
+.bg-login-image {
+    background: url("../img/logo.png");
+    background-position: center;
+    background-size: cover;
+}
+.login-imgdiv {
+    text-align: center;
+    margin-top: 35%;
+}
+.btn-primary {
+    color: #337AB7;
+    background-color: unset; 
+    border-color: #337AB7;
+}
+.login-btn {
+    font-weight: bold;
+    font-size: 16px !important;
+}
+.btn-primary:hover {
+    color: #fff;
+    background-color: #337AB7;
+    border-color: #337AB7;
+}
+.green {
+    color: green;
+}
+.red {
+    color: red;
+}
