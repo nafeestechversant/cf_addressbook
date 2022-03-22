@@ -1,3 +1,9 @@
+<cfif structKeyExists(URL,'logout')>
+    <cfset structdelete(session,'stLoggedInUser') />
+</cfif>
+    <cfif structKeyExists(form,'fld_LoginSubmit')>
+      <cfinvoke component="login" method="getLoginQuery" returnvariable="errorMessage"></cfinvoke>             
+    </cfif>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -6,9 +12,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="">
         <meta name="author" content="">
-        <title>SB Admin 2 - Login</title>    
+        <title>Address Book - Login</title>    
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">    
         <link href="css/sb-admin-2.min.css" rel="stylesheet">
         <link href="css/style.css" rel="stylesheet">
     </head>
@@ -22,14 +27,14 @@
                             <ul class="navbar-nav ml-auto">                     
                                 <!-- Nav Item - Alerts -->
                                 <li class="nav-item dropdown no-arrow mx-1">
-                                    <a class="" href="#" id="userDropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <a class="" href="register.cfm" id="userDropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                         <i class="fas fa-fw fa-user-alt"></i>
                                         <span class="mr-2 d-none d-lg-inline text-white-600 small">Sign Up</span>                                
                                     </a>                            
                                 </li>                                                                        
                                 <!-- Nav Item - User Information -->
                                 <li class="nav-item dropdown no-arrow">
-                                    <a class="" href="#" id="userDropdown" role="button" aria-haspopup="true" aria-expanded="false">                               
+                                    <a class="" href="login.cfm" id="userDropdown" role="button" aria-haspopup="true" aria-expanded="false">                               
                                         <i class="fas fa-fw fa-sign-in-alt"></i>
                                         <span class="mr-2 d-none d-lg-inline text-white-600 small">Login</span>                                
                                     </a>                           
@@ -57,19 +62,28 @@
                                             <div class="text-center">
                                                 <h1 class="h4 text-gray-900 mb-4">LOGIN</h1>
                                             </div>
-                                            <form class="user">
+                                            <cfif isDefined('errorMessage') AND NOT arrayIsEmpty(errorMessage)>            
+                                                <cfloop array="#errorMessage#" index="message">
+                                                    <p  class="red">#message#</p>
+                                                </cfloop>
+                                            <cfelseif isDefined('errorMessage') AND arrayIsEmpty(errorMessage)>
+                                                <cflocation url = "index.html">         
+                                            </cfif>
+                                            <cfparam name="form.fld_userName"  default=""  type="string">
+                                            <cfparam name="form.fld_userPwd"  default=""  type="string">
+                                            <form class="user" method="post" action="">
                                                 <div class="form-group">
-                                                    <input type="email" class="form-control form-control-user"
-                                                        id="exampleInputEmail" aria-describedby="emailHelp"
-                                                        placeholder="Username">
+                                                    <input type="text" name="fld_userName" class="form-control form-control-user"
+                                                        id="fld_userName" aria-describedby="emailHelp"
+                                                        placeholder="Username" value="#form.fld_userName#">
+                                                    <h5 id="usercheck" class="red" >**Username is missing</h5>
                                                 </div>
                                                 <div class="form-group">
-                                                    <input type="password" class="form-control form-control-user"
-                                                        id="exampleInputPassword" placeholder="Password">
-                                                </div>                                       
-                                                <a href="index.html" class="btn btn-primary btn-user btn-block login-btn">
-                                                    Login
-                                                </a>
+                                                    <input type="password" name="fld_userPwd" class="form-control form-control-user"
+                                                        id="fld_userPwd" placeholder="Password" value="#form.fld_userPwd#">
+                                                    <h5 id="passcheck" class="red">**Password is missing</h5>
+                                                </div>
+                                                 <input type="submit" class="btn btn-primary btn-user btn-block login-btn" id="fld_LoginSubmit" name="fld_LoginSubmit" value="Login">                                               
                                                 <hr>
                                                 <a href="index.html" class="btn btn-google btn-user btn-block">
                                                     <i class="fab fa-google fa-fw"></i> Login with Google
@@ -80,7 +94,7 @@
                                             </form>
                                             <hr>                                   
                                             <div class="text-center">
-                                                <a class="small" href="register.html">Create an Account!</a>
+                                                <a class="small" href="register.cfm">Create an Account!</a>
                                             </div>
                                         </div>
                                     </div>
@@ -90,10 +104,8 @@
                     </div>
                 </div>
             </div>    
-            <script src="vendor/jquery/jquery.min.js"></script>
-            <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>    
-            <script src="vendor/jquery-easing/jquery.easing.min.js"></script>    
-            <script src="js/sb-admin-2.min.js"></script>
+            <script src="vendor/jquery/jquery.min.js"></script>   
+            <script src="js/validate.js"></script>
         </cfoutput>
     </body>
 </html>

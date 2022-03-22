@@ -1,17 +1,14 @@
 <!-- Set the value of MyDatabase to be the name you published the database under -->
 <cfcomponent output="false">
-    <cfset this.name = 'CF 28 Task' />
+    <cfset this.name = 'Address Book' />
 	<cfset this.applicationTimeout = createtimespan(0,2,0,0) />    
-    <cfset this.datasource = 'cf28tasks' /> 
+    <cfset this.datasource = 'cf_addressbook' /> 
 	<cfset this.sessionManagement = true />
 	<cfset this.sessionTimeout = createTimespan(0,0,30,0) />  
 	
 
     <!---OnApplicationStart() method--->
 	<cffunction name="onApplicationStart" returntype="boolean" >	
-	
-		<cfset application.utils = createObject("component",'utils') />
-		<cfset application.task23 = createObject("component",'task23') />
 		<cfset application.myglobalvariable = structNew()>
 		<cfreturn true />
 	</cffunction>
