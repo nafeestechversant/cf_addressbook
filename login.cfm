@@ -67,7 +67,7 @@
                                                     <p  class="red">#message#</p>
                                                 </cfloop>
                                             <cfelseif isDefined('errorMessage') AND arrayIsEmpty(errorMessage)>
-                                                <cflocation url = "index.html">         
+                                                <cflocation url = "index.cfm">         
                                             </cfif>
                                             <cfparam name="form.fld_userName"  default=""  type="string">
                                             <cfparam name="form.fld_userPwd"  default=""  type="string">
