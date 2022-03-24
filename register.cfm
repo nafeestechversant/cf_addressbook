@@ -1,6 +1,5 @@
 <cfif structKeyExists(form,'fld_FormSubmit')>
-    <cfinvoke component="login" method="createUser" returnvariable="errorMessage"></cfinvoke>    
-    <cfoutput>Created Successfully</cfoutput> 
+    <cfinvoke component="login" method="createUser" returnvariable="errorMessage"></cfinvoke>        
 </cfif>
 <!DOCTYPE html>
 <html lang="en">

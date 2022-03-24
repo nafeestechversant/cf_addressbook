@@ -1,3 +1,15 @@
+<cfif NOT structKeyExists(session,'stLoggedInUser')>
+    <cflocation url = "login.cfm">
+</cfif>
+<cfif structKeyExists(URL,'From')>
+    <cfif URL.From IS "Delete">
+    <cfinvoke component="login" method="deleteContact"></cfinvoke>         
+    </cfif>
+</cfif>     
+<cfif structKeyExists(form,'submit_crteCon')>
+    <cfinvoke component="login" method="createContact" returnvariable="errorMessage"></cfinvoke>        
+</cfif>
+<cfinvoke component="login" method="getContacts" returnvariable="getContactLists"></cfinvoke>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -21,7 +33,11 @@
                             <li class="nav-item dropdown no-arrow">
                                 <a class="nav-link dropdown-toggle" href="##" id="userDropdown" role="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-white-600 small">Douglas McGee</span>                               
+                                    <span class="mr-2 d-none d-lg-inline text-white-600 small">
+                                        <cfif structKeyExists(session,'stLoggedInUser')>
+                                            #session.stLoggedInUser.userFullName#
+                                        </cfif>                                    
+                                    </span>                               
                                 </a>                            
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                     aria-labelledby="userDropdown">                                                                                          
@@ -39,6 +55,9 @@
         <div class="container">
             <div class="row bg-white mb-sm-4">
                 <div class="col-xl-12 col-lg-12 col-md-9">
+                    <cfif isDefined('errorMessage') AND arrayIsEmpty(errorMessage)>
+                        <p  class="green no-img3">Contact created successfully</p> 
+                    </cfif>  
                     <div class="print-sec">
                         <i class="far fa-file-pdf fa-sm fa-fw mr-2 text-white-400 pdf-icon"></i>
                         <i class="far fa-file-excel fa-sm fa-fw mr-2 text-white-400 excel-icon"></i>
@@ -50,7 +69,11 @@
                 <div class="col-xl-3 col-lg-3 pl-lg-0">
                     <div class="contact-sec bg-white">
                         <img class="no-img" src="img/RAY.jpg" width="50%" alt="...">
-                        <h6 class="m-0 font-weight-bold text-primary">Douglas McGee</h6> 
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <cfif structKeyExists(session,'stLoggedInUser')>
+                                #session.stLoggedInUser.userFullName#
+                            </cfif>
+                        </h6> 
                         <a class="btn btn-primary btn-create-cnt" href="##" data-toggle="modal" data-target="##CreateModal">                                   
                             CREATE CONTACT
                         </a>                                                                                                                                                  
@@ -63,7 +86,7 @@
                                 <h6 class="m-0 font-weight-bold text-primary">Contact Lists</h6>
                             </div>
                             <div class="card-body">
-                                <div class="table-responsive">
+                                <div class="table-responsive">                                   
                                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
@@ -71,34 +94,41 @@
                                                 <th>Name</th>
                                                 <th>Email</th>
                                                 <th>Phone</th>
-                                                <th colspan="3">Action</th>
-                                                
+                                                <th colspan="3">Action</th>                                                
                                             </tr>
                                         </thead>                                              
                                         <tbody>
-                                            <tr>
-                                                <td class="image-td"><img class="no-img2" src="img/RAY.jpg" width="25%" alt="..."></td>
-                                                <td>Tiger Nixon</td>
-                                                <td>System Architect</td>
-                                                <td>Edinburgh</td>
-                                                <td>
-                                                    <a class="btn btn-primary btn-action-cnt" href="##" data-toggle="modal" data-target="##CreateModal">                                   
-                                                        Edit
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <a class="btn btn-primary btn-action-cnt" href="##" data-toggle="modal" data-target="##DeleteModal">                                   
-                                                        Delete
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <a class="btn btn-primary btn-action-cnt" href="##" data-toggle="modal" data-target="##ViewModal">                                   
-                                                        View
-                                                    </a>
-                                                </td>
-                                            </tr>
+                                            <cfloop query="variables.getContactLists"> 
+                                                <tr>
+                                                    <td class="image-td">
+                                                        <cfif variables.getContactLists.contact_image EQ ''>
+                                                            <img class="no-img2" src="img/RAY.jpg" width="25%" alt="...">
+                                                        <cfelse>  
+                                                            <img class="no-img2" src="img/contact-img/#variables.getContactLists.contact_image#" width="25%" alt="...">                                     
+                                                        </cfif> 
+                                                    </td>
+                                                    <td>#getContactLists.firstname#</td>
+                                                    <td>#getContactLists.contact_email#</td>
+                                                    <td>#getContactLists.contact_phone#</td>
+                                                    <td>
+                                                        <a class="btn btn-primary btn-action-cnt" href="##" data-toggle="modal" data-target="##CreateModal">                                   
+                                                            Edit
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-primary btn-action-cnt " href="javascript:confirmDelete(#getContactLists.contact_id#);">                                   
+                                                            Delete
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-primary btn-action-cnt" href="javascript:viewContact(#getContactLists.contact_id#);">                                   
+                                                            View
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </cfloop>
                                         </tbody>                                                                                                      
-                                    </table>
+                                    </table>                                     
                                 </div>
                             </div>
                         </div>                                                                                                            
@@ -114,105 +144,116 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Create Contact</h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
+                            <span aria-hidden="true">X</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="container">
                             <div class="row">
                                 <div class="col-xl-9 col-lg-9 pl-lg-0 pr-lg-0">
-                        <h5 class="font-weight-bold text-primary">Personal Contact</h5>
-                        <form class="user">
-                                <div class="form-group row">
-                                    <div class="col-sm-3 mb-3 mb-sm-0">
-                                        <label>Title</label>
-                                        <select class="form-control form-control-user form-select">
-                                            <option>Open this select menu</option>
-                                            <option value="Mr">Mr</option>
-                                            <option value="Mrs">Mrs</option>
-                                            <option value="Ms">Ms</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-5 mb-3 mb-sm-0">
-                                        <label>First Name</label>
-                                        <input type="text" class="form-control form-control-user" id="exampleFirstName"
-                                            placeholder="First Name">
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <label>Last Name</label>
-                                        <input type="text" class="form-control form-control-user" id="exampleLastName"
-                                            placeholder="Last Name">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <label>Gender</label>
-                                        <select class="form-control form-control-user form-select">                                            
-                                            <option value="male">Male</option>
-                                            <option value="female">Female</option>                                            
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label>Date of Birth</label>
-                                        <input type="date" class="form-control form-control-user"
-                                            id="exampleRepeatPassword" placeholder="">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <label>Upload Photo</label>
-                                        <input type="file" name="" class="form-control form-control-user"
-                                            id="" placeholder="" value="">
-                                    </div>                            
-                                </div>
-                                <h5 class="font-weight-bold text-primary">Contact Details</h5>                               
-                                <div class="form-group row">                                    
-                                    <div class="col-sm-5 mb-3 mb-sm-0">
-                                        <label>Address</label>
-                                        <input type="password" class="form-control form-control-user"
-                                            id="exampleInputPassword" placeholder="Address">
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <label>Street</label>
-                                        <input type="password" class="form-control form-control-user"
-                                            id="exampleRepeatPassword" placeholder="Street">
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <label>Pincode</label>
-                                        <input type="password" class="form-control form-control-user"
-                                            id="exampleRepeatPassword" placeholder="Pincode">
-                                    </div>
-                                </div>
-                                 <div class="form-group  row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <label>Email</label>
-                                        <input type="email" class="form-control form-control-user" id="exampleInputEmail"
-                                            placeholder="Email Address">
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label>Phone</label>
-                                          <input type="email" class="form-control form-control-user" id="exampleInputEmail"
-                                            placeholder="Phone">
-                                    </div>                                  
-                                </div>
-                                <a href="login.html" class="btn btn-primary btn-user btn-block">
-                                    Register Account
-                                </a>
-                                <hr>
-                               
-                        </form>
-                    </div>
-                    <div class="col-xl-3 col-lg-3 pr-lg-0 no-img3">
-                        <img class="no-img" src="img/RAY.jpg" width="75%" alt="...">
-                    </div>
+                                    <h5 class="font-weight-bold text-primary">Personal Contact</h5>
+                                    <cfif isDefined('errorMessage') AND NOT arrayIsEmpty(errorMessage)>            
+                                        <cfloop array="#errorMessage#" index="message">
+                                            <p  class="red">#message#</p>
+                                        </cfloop>
 
-                    </div>
-                    </div>
-                    </div>
-                    <div class="modal-footer">
-                        <a class="btn btn-primary" href="login.cfm?logout">Create</a>
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>                        
-                    </div>
+                                    </cfif>
+                                    <cfparam name="form.user_id" default=""  type="string">
+                                    <cfparam name="form.cont_title" default=""  type="string">
+                                    <cfparam name="form.cont_firstname" default=""  type="string">
+                                    <cfparam name="form.cont_lastname" default=""  type="string">
+                                    <cfparam name="form.cont_gender" default=""  type="string">
+                                    <cfparam name="form.cont_dob" default=""  type="string">
+                                    <cfparam name="form.cont_photo" default=""  type="string">
+                                    <cfparam name="form.cont_addr" default=""  type="string">
+                                    <cfparam name="form.cont_street" default=""  type="string">
+                                    <cfparam name="form.cont_pin" default=""  type="string">
+                                    <cfparam name="form.cont_email" default=""  type="string">
+                                    <cfparam name="form.cont_phone" default=""  type="string">
+                                    <form class="user" method="post" action="" enctype="multipart/form-data">
+                                            <input type="hidden" name="user_id" value="#session.stLoggedInUser.userID#">
+                                            <div class="form-group row">
+                                                <div class="col-sm-3 mb-3 mb-sm-0">
+                                                    <label>Title</label>
+                                                    <select class="form-control form-control-user form-select" name="cont_title" id="cont_title" value="#form.cont_title#">                                           
+                                                        <option value=""></option>
+                                                        <option value="Mr">Mr</option>
+                                                        <option value="Mrs">Mrs</option>
+                                                        <option value="Ms">Ms</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-5 mb-3 mb-sm-0">
+                                                    <label>First Name</label>
+                                                    <input type="text" class="form-control form-control-user" name="cont_firstname" id="cont_firstname" value="#form.cont_firstname#"
+                                                        placeholder="First Name">
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label>Last Name</label>
+                                                    <input type="text" class="form-control form-control-user" name="cont_lastname" id="cont_lastname" value="#form.cont_lastname#"
+                                                        placeholder="Last Name">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                                    <label>Gender</label>
+                                                    <select class="form-control form-control-user form-select" name="cont_gender" id="cont_gender" value="#form.cont_gender#">                                            
+                                                        <option value=""></option>
+                                                        <option value="male">Male</option>
+                                                        <option value="female">Female</option>                                            
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label>Date of Birth</label>
+                                                    <input type="date" class="form-control form-control-user" id="cont_dob" name="cont_dob" value="#form.cont_dob#" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                                    <label>Upload Photo</label>
+                                                    <input type="file" name="cont_photo" class="form-control form-control-user"
+                                                        id="cont_photo" placeholder="" value="#form.cont_photo#" onchange="readURL(this);">
+                                                </div>                            
+                                            </div>
+                                            <h5 class="font-weight-bold text-primary">Contact Details</h5>                               
+                                            <div class="form-group row">                                    
+                                                <div class="col-sm-5 mb-3 mb-sm-0">
+                                                    <label>Address</label>
+                                                    <input type="text" class="form-control form-control-user"
+                                                        id="cont_addr" name="cont_addr" value="#form.cont_addr#" placeholder="Address">
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label>Street</label>
+                                                    <input type="text" name="cont_street" value="#form.cont_street#" class="form-control form-control-user"
+                                                        id="cont_street" placeholder="Street">
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <label>Pincode</label>
+                                                    <input type="text" name="cont_pin" value="#form.cont_pin#" class="form-control form-control-user"
+                                                        id="cont_pin" placeholder="Pincode">
+                                                </div>
+                                            </div>
+                                            <div class="form-group  row">
+                                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                                    <label>Email</label>
+                                                    <input type="email" name="cont_email" id="cont_email" value="#form.cont_email#" class="form-control form-control-user" id="exampleInputEmail"
+                                                        placeholder="Email Address">
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label>Phone</label>
+                                                    <input type="text" name="cont_phone" id="cont_phone" value="#form.cont_phone#" class="form-control form-control-user" id="exampleInputEmail"
+                                                        placeholder="Phone">
+                                                </div>                                  
+                                            </div>
+                                            <input type="submit" class="btn btn-primary btn-user btn-block" id="submit_crteCon" name="submit_crteCon" value="Create Account">                               
+                                            <hr>                               
+                                    </form>
+                                </div>
+                                <div class="col-xl-3 col-lg-3 pr-lg-0 no-img3">
+                                    <img class="no-img" id="cnt-img" src="img/RAY.jpg" width="75%" alt="...">
+                                </div>
+                            </div>
+                        </div>
+                    </div>                   
                 </div>
             </div>
         </div>
@@ -222,86 +263,68 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Contact Details</h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
+                            <span aria-hidden="true">X</span>
                         </button>
                     </div>
                    <div class="modal-body">
                         <div class="container">
                             <div class="row">
-                                <div class="col-xl-9 col-lg-9 pl-lg-0 pr-lg-0">
-                        <h5 class="font-weight-bold text-primary">Personal Contact</h5>
-                             <div class="table-responsive">
-                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                                                                     
-                                        <tbody>
-                                            <tr><td>
-                                        <label>Title</label>
-                                                </td>
-                                                <td>Tiger Nixon</td>                                                
-                                            </tr>
-                                              <tr><td>
-                                        <label>First Name</label>
-                                                </td>
-                                                <td>Tiger Nixon</td>                                                
-                                            </tr>
-                                              <tr><td>
-                                        <label>Last Name</label>
-                                                </td>
-                                                <td>Tiger Nixon</td>                                                
-                                            </tr>
-                                              <tr><td>
-                                        <label>Gender</label>
-                                                </td>
-                                                <td>Tiger Nixon</td>                                                
-                                            </tr>
-                                              <tr><td>
-                                        <label>Date of Birth</label>
-                                                </td>
-                                                <td>Tiger Nixon</td>                                                
-                                            </tr>
-                                              <tr><td>
-                                        <label>Address</label>
-                                                </td>
-                                                <td>Tiger Nixon</td>                                                
-                                            </tr>
-                                              <tr><td>
-                                        <label>Street</label>
-                                                </td>
-                                                <td>Tiger Nixon</td>                                                
-                                            </tr>
-                                             <tr><td>
-                                        <label>Pincode</label>
-                                                </td>
-                                                <td>Tiger Nixon</td>                                                
-                                            </tr>
-                                             <tr><td>
-                                        <label>Email</label>
-                                                </td>
-                                                <td>Tiger Nixon</td>                                                
-                                            </tr>
-                                             <tr><td>
-                                        <label>Phone</label>
-                                                </td>
-                                                <td>Tiger Nixon</td>                                                
-                                            </tr>
-                                        </tbody>                                                                                                      
-                                    </table>
-                                </div>
-                       
-                                
-                               
-                               
-                               
-                       
-                    </div>
-                    <div class="col-xl-3 col-lg-3 pr-lg-0 no-img3">
-                        <img class="no-img" src="img/RAY.jpg" width="75%" alt="...">
-                    </div>
-
-                    </div>
-                    </div>
+                                <cfif structKeyExists(URL,'From')>
+                                    <cfif URL.From IS "View">
+                                        <cfinvoke component="login" method="getContactById" returnvariable="getContactId"></cfinvoke> 
+                                            <div class="col-xl-9 col-lg-9 pl-lg-0 pr-lg-0">                       
+                                                <div class="table-responsive">                                                                                        
+                                                    <table class="table bor-none" id="dataTable" width="100%" cellspacing="0">                                                                                        
+                                                        <tbody>
+                                                            <tr><td><label>Title</label></td>                                                    
+                                                                <td>#variables.getContactId.title#</td>                                                
+                                                            </tr>
+                                                            <tr><td><label>First Name</label></td>                                                                                               
+                                                                <td>#variables.getContactId.firstname#</td>                                                
+                                                            </tr>
+                                                            <tr><td><label>Last Name</label></td>                                                                                                                
+                                                                <td>#variables.getContactId.lastname#</td>                                                
+                                                            </tr>
+                                                            <tr><td><label>Gender</label></td>
+                                                                <td>#variables.getContactId.gender#</td>                                                
+                                                            </tr>
+                                                            <tr><td><label>Date of Birth</label></td>                                                                                                                
+                                                                <td>#variables.getContactId.dateof_birth#</td>                                                
+                                                            </tr>
+                                                            <tr><td><label>Address</label></td>                                                                                                                
+                                                                <td>#variables.getContactId.address#</td>                                                
+                                                            </tr>
+                                                            <tr><td><label>Street</label></td>                                                                                                                
+                                                                <td>#variables.getContactId.street#</td>                                                
+                                                            </tr>
+                                                            <tr><td><label>Pincode</label></td>                                                                                                                
+                                                                <td>#variables.getContactId.pincode#</td>                                                
+                                                            </tr>
+                                                            <tr><td><label>Email</label></td>                                                                                                                
+                                                                <td>#variables.getContactId.contact_email#</td>                                                
+                                                            </tr>
+                                                            <tr><td><label>Phone</label></td>                                                                                                            
+                                                                <td>#variables.getContactId.contact_phone#</td>                                                
+                                                            </tr>
+                                                        </tbody>                                                                                                      
+                                                    </table>
+                                                    
+                                                    
+                                                </div>                                                                                                                                                                           
+                                            </div>
+                                            <div class="col-xl-3 col-lg-3 pr-lg-0 no-img3">
+                                                <cfif variables.getContactId.contact_image EQ ''>
+                                                    <img class="no-img" src="img/RAY.jpg" width="75%" alt="...">
+                                                <cfelse>  
+                                                    <img class="no-img" src="img/contact-img/#variables.getContactId.contact_image#" width="100%" height="50%" alt="...">                                     
+                                                </cfif>                                    
+                                            </div>
+                                    </cfif>
+                                </cfif>    
+                            </div>
+                         </div>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>                        
@@ -317,13 +340,14 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Confirm Delete?</h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
+                            <span aria-hidden="true">X</span>
                         </button>
                     </div>
                     <div class="modal-body">Are you sure want to delete.</div>
                     <div class="modal-footer">
+                        <input type="hidden" name="cntId" id="cntId" value=""/>
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">No</button>
-                        <a class="btn btn-primary" href="login.cfm?logout">Yes</a>
+                        <a class="btn btn-primary" href="">Yes</a>
                     </div>
                 </div>
             </div>
@@ -350,6 +374,14 @@
         <!-- Bootstrap core JavaScript-->
         <script src="vendor/jquery/jquery.min.js"></script>
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="js/contact.js"></script>
+        <script>             
+            <cfif structKeyExists(URL,'From')>
+                <cfif URL.From IS "View">
+                    $('##ViewModal').modal('show');
+                </cfif>
+            </cfif>
+        </script>
     </cfoutput>
 </body>
 </html>

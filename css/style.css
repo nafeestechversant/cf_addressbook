@@ -104,6 +104,14 @@ margin-bottom: 4%;
 .no-img3 {
     text-align: center;
     }
+    .bor-none td {
+        border: none;
+        padding: 0;
+    }
+    .bor-none label {
+        color: #337AB7!important;
+        font-weight: 600;
+    }
 @media (min-width: 576px){
 .modal-dialog {
     max-width: 700px;
