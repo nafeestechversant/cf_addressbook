@@ -59,7 +59,9 @@
                         <p  class="green no-img3">Contact created successfully</p> 
                     </cfif>  
                     <div class="print-sec">
-                        <i class="far fa-file-pdf fa-sm fa-fw mr-2 text-white-400 pdf-icon"></i>
+                        <a href="contact_pdf.cfm">
+                            <i class="far fa-file-pdf fa-sm fa-fw mr-2 text-white-400 pdf-icon"></i>
+                        </a>
                         <i class="far fa-file-excel fa-sm fa-fw mr-2 text-white-400 excel-icon"></i>
                         <i class="fas fa-print fa-sm fa-fw mr-2 text-white-400 print-icon"></i>                                                                                                                
                     </div>
@@ -111,7 +113,7 @@
                                                     <td>#getContactLists.contact_email#</td>
                                                     <td>#getContactLists.contact_phone#</td>
                                                     <td>
-                                                        <a class="btn btn-primary btn-action-cnt" href="##" data-toggle="modal" data-target="##CreateModal">                                   
+                                                        <a class="btn btn-primary btn-action-cnt btn-action-edit" data-id="#getContactLists.contact_id#" data-toggle="modal" data-target="##CreateModal">                                   
                                                             Edit
                                                         </a>
                                                     </td>
@@ -159,6 +161,7 @@
 
                                     </cfif>
                                     <cfparam name="form.user_id" default=""  type="string">
+                                    <cfparam name="form.cont_id" default=""  type="string">
                                     <cfparam name="form.cont_title" default=""  type="string">
                                     <cfparam name="form.cont_firstname" default=""  type="string">
                                     <cfparam name="form.cont_lastname" default=""  type="string">
@@ -172,10 +175,11 @@
                                     <cfparam name="form.cont_phone" default=""  type="string">
                                     <form class="user" method="post" action="" enctype="multipart/form-data">
                                             <input type="hidden" name="user_id" value="#session.stLoggedInUser.userID#">
+                                            <input type="hidden" name="cont_id" id="cont_id" value="">
                                             <div class="form-group row">
                                                 <div class="col-sm-3 mb-3 mb-sm-0">
                                                     <label>Title</label>
-                                                    <select class="form-control form-control-user form-select" name="cont_title" id="cont_title" value="#form.cont_title#">                                           
+                                                    <select class="form-control form-select" name="cont_title" id="cont_title">                                           
                                                         <option value=""></option>
                                                         <option value="Mr">Mr</option>
                                                         <option value="Mrs">Mrs</option>
@@ -184,19 +188,19 @@
                                                 </div>
                                                 <div class="col-sm-5 mb-3 mb-sm-0">
                                                     <label>First Name</label>
-                                                    <input type="text" class="form-control form-control-user" name="cont_firstname" id="cont_firstname" value="#form.cont_firstname#"
+                                                    <input type="text" class="form-control form-control-user" name="cont_firstname" id="cont_firstname"
                                                         placeholder="First Name">
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label>Last Name</label>
-                                                    <input type="text" class="form-control form-control-user" name="cont_lastname" id="cont_lastname" value="#form.cont_lastname#"
+                                                    <input type="text" class="form-control form-control-user" name="cont_lastname" id="cont_lastname"
                                                         placeholder="Last Name">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <div class="col-sm-6 mb-3 mb-sm-0">
                                                     <label>Gender</label>
-                                                    <select class="form-control form-control-user form-select" name="cont_gender" id="cont_gender" value="#form.cont_gender#">                                            
+                                                    <select class="form-control form-select" name="cont_gender" id="cont_gender">                                            
                                                         <option value=""></option>
                                                         <option value="male">Male</option>
                                                         <option value="female">Female</option>                                            
@@ -204,14 +208,14 @@
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <label>Date of Birth</label>
-                                                    <input type="date" class="form-control form-control-user" id="cont_dob" name="cont_dob" value="#form.cont_dob#" placeholder="">
+                                                    <input type="date" class="form-control form-control-user" id="cont_dob" name="cont_dob" placeholder="">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <div class="col-sm-6 mb-3 mb-sm-0">
                                                     <label>Upload Photo</label>
                                                     <input type="file" name="cont_photo" class="form-control form-control-user"
-                                                        id="cont_photo" placeholder="" value="#form.cont_photo#" onchange="readURL(this);">
+                                                        id="cont_photo" placeholder="" onchange="readURL(this);">
                                                 </div>                            
                                             </div>
                                             <h5 class="font-weight-bold text-primary">Contact Details</h5>                               
@@ -219,28 +223,28 @@
                                                 <div class="col-sm-5 mb-3 mb-sm-0">
                                                     <label>Address</label>
                                                     <input type="text" class="form-control form-control-user"
-                                                        id="cont_addr" name="cont_addr" value="#form.cont_addr#" placeholder="Address">
+                                                        id="cont_addr" name="cont_addr" placeholder="Address">
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label>Street</label>
-                                                    <input type="text" name="cont_street" value="#form.cont_street#" class="form-control form-control-user"
+                                                    <input type="text" name="cont_street" class="form-control form-control-user"
                                                         id="cont_street" placeholder="Street">
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <label>Pincode</label>
-                                                    <input type="text" name="cont_pin" value="#form.cont_pin#" class="form-control form-control-user"
+                                                    <input type="text" name="cont_pin" class="form-control form-control-user"
                                                         id="cont_pin" placeholder="Pincode">
                                                 </div>
                                             </div>
                                             <div class="form-group  row">
                                                 <div class="col-sm-6 mb-3 mb-sm-0">
                                                     <label>Email</label>
-                                                    <input type="email" name="cont_email" id="cont_email" value="#form.cont_email#" class="form-control form-control-user" id="exampleInputEmail"
+                                                    <input type="email" name="cont_email" id="cont_email" class="form-control form-control-user" id="exampleInputEmail"
                                                         placeholder="Email Address">
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <label>Phone</label>
-                                                    <input type="text" name="cont_phone" id="cont_phone" value="#form.cont_phone#" class="form-control form-control-user" id="exampleInputEmail"
+                                                    <input type="text" name="cont_phone" id="cont_phone" class="form-control form-control-user" id="exampleInputEmail"
                                                         placeholder="Phone">
                                                 </div>                                  
                                             </div>
@@ -309,9 +313,7 @@
                                                                 <td>#variables.getContactId.contact_phone#</td>                                                
                                                             </tr>
                                                         </tbody>                                                                                                      
-                                                    </table>
-                                                    
-                                                    
+                                                    </table>                                                                                                        
                                                 </div>                                                                                                                                                                           
                                             </div>
                                             <div class="col-xl-3 col-lg-3 pr-lg-0 no-img3">
@@ -380,7 +382,7 @@
                 <cfif URL.From IS "View">
                     $('##ViewModal').modal('show');
                 </cfif>
-            </cfif>
+            </cfif>            
         </script>
     </cfoutput>
 </body>

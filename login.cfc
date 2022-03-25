@@ -70,6 +70,7 @@
 		<cfset variables.cont_email = form.cont_email/>
 		<cfset variables.cont_phone = form.cont_phone/>
 		<cfset variables.user_id = form.user_id/>
+		<cfset variables.cont_id = form.cont_id/>
 		<cfif variables.cont_title EQ ''>
 			<cfset arrayAppend(errorMessage, 'Please Enter Title')>
 		</cfif>		
@@ -100,14 +101,44 @@
 		<cfif variables.cont_phone EQ ''>
 			<cfset arrayAppend(errorMessage, 'Please Enter Phone')>
 		</cfif>
-
+		<cfset variables.cont_imge = "">
 		<cfif structKeyExists(form,"cont_photo") and len(trim(form.cont_photo))>
 			<cfset variables.thisDir = expandPath(".")>
 			<cffile action="upload" fileField="form.cont_photo" destination="#variables.thisDir#/img/contact-img" result="fileUpload" nameconflict="overwrite">
+			<cfset variables.cont_imge = #fileUpload.serverFile#>
 		</cfif>
-		<cfif arrayIsEmpty(errorMessage)>
+		<cfif arrayIsEmpty(errorMessage) AND variables.cont_id EQ ''>
 			<cfquery>INSERT INTO contact (user_id,title,firstname,lastname,gender,dateof_birth,contact_image,address,street,pincode,contact_email,contact_phone)
-				VALUES ('#variables.user_id#','#variables.cont_title#','#variables.cont_firstname#','#variables.cont_lastname#','#variables.cont_gender#','#variables.cont_dob#','#fileUpload.serverFile#','#variables.cont_addr#','#variables.cont_street#','#variables.cont_pin#','#variables.cont_email#','#variables.cont_phone#')
+				VALUES (
+				<cfqueryparam value="#variables.user_id#" cfsqltype="cf_sql_varchar" />,	
+				<cfqueryparam value="#variables.cont_title#" cfsqltype="cf_sql_varchar" />,
+				<cfqueryparam value="#variables.cont_firstname#" cfsqltype="cf_sql_varchar" />,
+				<cfqueryparam value="#variables.cont_lastname#" cfsqltype="cf_sql_varchar" />,
+				<cfqueryparam value="#variables.cont_gender#" cfsqltype="cf_sql_varchar" />,
+				<cfqueryparam value="#variables.cont_dob#" cfsqltype="CF_SQL_DATE" />,
+				<cfqueryparam value="#variables.cont_imge#" cfsqltype="cf_sql_varchar" />,
+				<cfqueryparam value="#variables.cont_addr#" cfsqltype="cf_sql_varchar" />,
+				<cfqueryparam value="#variables.cont_street#" cfsqltype="cf_sql_varchar" />,
+				<cfqueryparam value="#variables.cont_pin#" cfsqltype="cf_sql_varchar" />,
+				<cfqueryparam value="#variables.cont_email#" cfsqltype="cf_sql_varchar" />,
+				<cfqueryparam value="#variables.cont_phone#" cfsqltype="cf_sql_varchar" />
+					
+					)
+			</cfquery>			
+		</cfif>
+		<cfif arrayIsEmpty(errorMessage) AND variables.cont_id NEQ ''>
+			<cfquery>UPDATE contact SET 			
+				title = <cfqueryparam value="#variables.cont_title#" cfsqltype="cf_sql_varchar" />,
+				firstname = <cfqueryparam value="#variables.cont_firstname#" cfsqltype="cf_sql_varchar" />,
+				lastname = <cfqueryparam value="#variables.cont_lastname#" cfsqltype="cf_sql_varchar" />,
+				gender = <cfqueryparam value="#variables.cont_gender#" cfsqltype="cf_sql_varchar" />,
+				dateof_birth = <cfqueryparam value="#variables.cont_dob#" cfsqltype="CF_SQL_DATE" />,
+				contact_image = <cfqueryparam value="#variables.cont_photo#" cfsqltype="cf_sql_varchar" />,
+				address = <cfqueryparam value="#variables.cont_addr#" cfsqltype="cf_sql_varchar" />,
+				street = <cfqueryparam value="#variables.cont_street#" cfsqltype="cf_sql_varchar" />,
+				pincode = <cfqueryparam value="#variables.cont_pin#" cfsqltype="cf_sql_varchar" />,
+				contact_email = <cfqueryparam value="#variables.cont_email#" cfsqltype="cf_sql_varchar" />,
+				contact_phone  = <cfqueryparam value="#variables.cont_phone#" cfsqltype="cf_sql_varchar" /> WHERE contact_id = #variables.cont_id#	AND user_id = #variables.user_id#			
 			</cfquery>			
 		</cfif>
 		<cfreturn variables.errorMessage />						
@@ -129,9 +160,16 @@
 	<cffunction name="getContactById" access="public" output="false" returntype="query">		
 		<cfquery name="local.rs_getContactById">
 			SELECT * FROM contact  WHERE contact_id = <cfqueryparam value="#URL.ID#" cfsqltype="cf_sql_integer" /> AND user_id = <cfqueryparam value="#session.stLoggedInUser.userID#" cfsqltype="cf_sql_integer" />
-		</cfquery>
-		<cfdump  var="#local.rs_getContactById#">
+		</cfquery>		
 		<cfreturn local.rs_getContactById />
+	</cffunction>
+
+	<cffunction name="getContactBy" access="remote" output="false" returntype="any" returnformat="JSON">
+		<cfargument name="contact_id" required="yes">		
+		<cfquery name="local.rs_getContactBy">
+			SELECT * FROM contact  WHERE contact_id = <cfqueryparam value="#arguments.contact_id#" cfsqltype="cf_sql_integer" /> AND user_id = <cfqueryparam value="#session.stLoggedInUser.userID#" cfsqltype="cf_sql_integer" />
+		</cfquery>		
+		<cfreturn serializeJSON(local.rs_getContactBy,"struct") />
 	</cffunction>
 
 	<cffunction name="updatePageById" access="public" output="false" >		
