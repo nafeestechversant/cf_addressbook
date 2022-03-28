@@ -26,7 +26,12 @@
 		</cfif>
 		<cfif arrayIsEmpty(errorMessage)>
 			<cfquery>INSERT INTO users (fullname,email_id,username, pwd)
-				VALUES ('#variables.fld_fullName#','#form.fld_userEmail#','#form.fld_userName#', '#hash(form.fld_userPwd,'SHA')#')
+				VALUES (
+					<cfqueryparam value="#variables.fld_fullName#" cfsqltype="cf_sql_varchar" />,
+					<cfqueryparam value="#variables.fld_userEmail#" cfsqltype="cf_sql_varchar" />,
+					<cfqueryparam value="#variables.fld_userName#" cfsqltype="cf_sql_varchar" />,
+					<cfqueryparam value="#hash(variables.fld_userPwd,'SHA')#" cfsqltype="cf_sql_varchar" />					
+					)
 			</cfquery>			
 		</cfif>
 		<cfreturn variables.errorMessage />						
@@ -68,8 +73,7 @@
 		<cfset variables.cont_street = form.cont_street/>
 		<cfset variables.cont_pin = form.cont_pin/>
 		<cfset variables.cont_email = form.cont_email/>
-		<cfset variables.cont_phone = form.cont_phone/>
-		<cfset variables.user_id = form.user_id/>
+		<cfset variables.cont_phone = form.cont_phone/>		
 		<cfset variables.cont_id = form.cont_id/>
 		<cfif variables.cont_title EQ ''>
 			<cfset arrayAppend(errorMessage, 'Please Enter Title')>
@@ -110,7 +114,7 @@
 		<cfif arrayIsEmpty(errorMessage) AND variables.cont_id EQ ''>
 			<cfquery>INSERT INTO contact (user_id,title,firstname,lastname,gender,dateof_birth,contact_image,address,street,pincode,contact_email,contact_phone)
 				VALUES (
-				<cfqueryparam value="#variables.user_id#" cfsqltype="cf_sql_varchar" />,	
+				<cfqueryparam value="#session.stLoggedInUser.userID#" cfsqltype="cf_sql_varchar" />,	
 				<cfqueryparam value="#variables.cont_title#" cfsqltype="cf_sql_varchar" />,
 				<cfqueryparam value="#variables.cont_firstname#" cfsqltype="cf_sql_varchar" />,
 				<cfqueryparam value="#variables.cont_lastname#" cfsqltype="cf_sql_varchar" />,
@@ -157,6 +161,13 @@
 		<cfreturn local.rs_getContacts />
 	</cffunction>
 
+	<cffunction name="getContactsExcel" access="public" output="false" returntype="query">		
+		<cfquery name="local.rs_getContacts">
+			SELECT firstname,contact_email,contact_phone,address,street,pincode FROM contact WHERE user_id = <cfqueryparam value="#session.stLoggedInUser.userID#" cfsqltype="cf_sql_integer" /> ORDER BY contact_id
+		</cfquery>
+		<cfreturn local.rs_getContacts />
+	</cffunction>
+
 	<cffunction name="getContactById" access="public" output="false" returntype="query">		
 		<cfquery name="local.rs_getContactById">
 			SELECT * FROM contact  WHERE contact_id = <cfqueryparam value="#URL.ID#" cfsqltype="cf_sql_integer" /> AND user_id = <cfqueryparam value="#session.stLoggedInUser.userID#" cfsqltype="cf_sql_integer" />
@@ -170,12 +181,24 @@
 			SELECT * FROM contact  WHERE contact_id = <cfqueryparam value="#arguments.contact_id#" cfsqltype="cf_sql_integer" /> AND user_id = <cfqueryparam value="#session.stLoggedInUser.userID#" cfsqltype="cf_sql_integer" />
 		</cfquery>		
 		<cfreturn serializeJSON(local.rs_getContactBy,"struct") />
+	</cffunction>	
+
+	<cffunction name="updateUserImage" access="remote" output="false" >	
+		<cfset variables.thisDir = expandPath(".")>
+		<cffile action="upload" filefield="form.upload" destination="#variables.thisDir#/img/profile-img" nameconflict="makeunique" result="uploadResult">	
+		<cfif uploadResult.fileWasSaved>
+			<cfset variables.user_imge = #uploadResult.serverFile#>
+			<cfquery>
+				UPDATE users SET image_name = '#variables.user_imge#' WHERE userid = <cfqueryparam value="#session.stLoggedInUser.userID#" cfsqltype="cf_sql_integer" />
+			</cfquery>
+		</cfif>					
 	</cffunction>
 
-	<cffunction name="updatePageById" access="public" output="false" >		
-		<cfquery>
-			UPDATE task28_1 SET pagename = '#form.pagename#',pagedescs = '#form.pagedescs#' WHERE pageid = #URL.ID#
+	<cffunction name="getUserImage" access="public" output="false" returntype="query">		
+		<cfquery name="local.rs_getUserImage">
+			SELECT image_name FROM users  WHERE userid = <cfqueryparam value="#session.stLoggedInUser.userID#" cfsqltype="cf_sql_integer" />
 		</cfquery>		
+		<cfreturn local.rs_getUserImage />
 	</cffunction>		 
 </cfcomponent>
 

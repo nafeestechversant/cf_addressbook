@@ -1,76 +1,94 @@
 .container-fluid {
-    padding-left: 0px; 
+    padding-left: 0px;
     padding-right: 0px;
 }
-.bg-blue {    
-    background-color: #337AB7 !important;  
+
+.bg-blue {
+    background-color: #337AB7 !important;
 }
+
 .bg-gradient-primary {
     background-color: #D8E5F1;
-    background-image:none;
+    background-image: none;
 }
+
 .text-white-600 {
     color: #fff!important;
 }
+
 .nav-item i {
     color: #fff;
 }
+
 .bg-login-image {
     background: url("../img/logo.png");
     background-position: center;
     background-size: cover;
 }
+
 .login-imgdiv {
     text-align: center;
     margin-top: 35%;
 }
+
 .btn-primary {
     color: #337AB7;
-    background-color: unset; 
+    background-color: unset;
     border-color: #337AB7;
 }
+
 .login-btn {
     font-weight: bold;
     font-size: 16px !important;
 }
+
 .btn-primary:hover {
     color: #fff;
     background-color: #337AB7;
     border-color: #337AB7;
 }
+
 .green {
     color: green;
 }
+
 .red {
     color: red;
 }
+
 .print-sec {
     float: right;
     padding: 15px;
 }
+
 .pdf-icon {
     font-size: 25px;
     color: red;
     cursor: pointer;
-}   
+}
+
 .excel-icon {
     font-size: 25px;
     color: green;
     cursor: pointer;
-}  
+}
+
 .print-icon {
     font-size: 25px;
     color: black;
     cursor: pointer;
 }
+
 .contact-sec {
     text-align: center;
 }
+
 .no-img {
-border-radius: 50%;
-margin-top: 8%;
-margin-bottom: 4%;
+    border-radius: 50%;
+    margin-top: 8%;
+    margin-bottom: 4%;
 }
+
 .btn-create-cnt {
     border-radius: 30px;
     color: #fff;
@@ -78,43 +96,56 @@ margin-bottom: 4%;
     margin-top: 10%;
     margin-bottom: 10%;
 }
+
 .btn-action-cnt {
     border-radius: 18px;
-    color: #337AB7; 
+    color: #337AB7;
 }
+
 .text-primary {
     color: #337AB7!important;
 }
+
 .no-img2 {
     border-radius: 50%;
     margin-top: 12%;
-    }
+}
+
 .image-td {
     width: 15%;
     text-align: center;
     padding: 0 !important;
 }
+
 .modal-footer {
     text-align: center;
     display: unset;
 }
-.form-control-user    {
+
+.form-control-user {
     border-radius: unset !important;
 }
+
 .no-img3 {
     text-align: center;
-    }
-    .bor-none td {
-        border: none;
-        padding: 0;
-    }
-    .bor-none label {
-        color: #337AB7!important;
-        font-weight: 600;
-    }
-@media (min-width: 576px){
-.modal-dialog {
-    max-width: 700px;
-}
 }
 
+.bor-none td {
+    border: none;
+    padding: 0;
+}
+
+.bor-none label {
+    color: #337AB7!important;
+    font-weight: 600;
+}
+
+.no-display {
+    display: none;
+}
+
+@media (min-width: 576px) {
+    .modal-dialog {
+        max-width: 700px;
+    }
+}

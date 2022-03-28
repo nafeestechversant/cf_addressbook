@@ -10,6 +10,7 @@
     <cfinvoke component="login" method="createContact" returnvariable="errorMessage"></cfinvoke>        
 </cfif>
 <cfinvoke component="login" method="getContacts" returnvariable="getContactLists"></cfinvoke>
+<cfinvoke component="login" method="getUserImage" returnvariable="getUsrImage"></cfinvoke>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -62,26 +63,36 @@
                         <a href="contact_pdf.cfm">
                             <i class="far fa-file-pdf fa-sm fa-fw mr-2 text-white-400 pdf-icon"></i>
                         </a>
-                        <i class="far fa-file-excel fa-sm fa-fw mr-2 text-white-400 excel-icon"></i>
-                        <i class="fas fa-print fa-sm fa-fw mr-2 text-white-400 print-icon"></i>                                                                                                                
+                        <a href="contact_excel.cfm">
+                            <i class="far fa-file-excel fa-sm fa-fw mr-2 text-white-400 excel-icon"></i>
+                        </a>
+                        <i class="fas fa-print fa-sm fa-fw mr-2 text-white-400 print-icon" onclick="PrintElem()"></i>                                                                                                                
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-xl-3 col-lg-3 pl-lg-0">
                     <div class="contact-sec bg-white">
-                        <img class="no-img" src="img/RAY.jpg" width="50%" alt="...">
+                        <form method="post" id="fileinfo" name="fileinfo">
+                            <cfif variables.getUsrImage.image_name EQ ''>
+                                 <input type="image" id="no-img" class="no-img" src="img/RAY.jpg" width="50%"/>
+                            <cfelse>  
+                                <input type="image" class="no-img" id="no-img" src="img/profile-img/#variables.getUsrImage.image_name#" width="50%" alt="...">                                     
+                            </cfif>                             
+                            <input type="file" id="my_file" name="upload" class="no-display"/>                            
+                        </form> 
                         <h6 class="m-0 font-weight-bold text-primary">
                             <cfif structKeyExists(session,'stLoggedInUser')>
                                 #session.stLoggedInUser.userFullName#
                             </cfif>
                         </h6> 
-                        <a class="btn btn-primary btn-create-cnt" href="##" data-toggle="modal" data-target="##CreateModal">                                   
+                        <a class="btn btn-primary btn-create-cnt" id="id-create-contact" data-toggle="modal" data-target="##CreateModal">                                   
                             CREATE CONTACT
                         </a>                                                                                                                                                  
                     </div>
                 </div>
                 <div class="col-xl-9 col-lg-9 pr-lg-0">
+                    <cfinclude template="contact_print.cfm">                     
                     <div class="contact-list bg-white">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
@@ -159,8 +170,7 @@
                                             <p  class="red">#message#</p>
                                         </cfloop>
 
-                                    </cfif>
-                                    <cfparam name="form.user_id" default=""  type="string">
+                                    </cfif>                                    
                                     <cfparam name="form.cont_id" default=""  type="string">
                                     <cfparam name="form.cont_title" default=""  type="string">
                                     <cfparam name="form.cont_firstname" default=""  type="string">
@@ -173,8 +183,7 @@
                                     <cfparam name="form.cont_pin" default=""  type="string">
                                     <cfparam name="form.cont_email" default=""  type="string">
                                     <cfparam name="form.cont_phone" default=""  type="string">
-                                    <form class="user" method="post" action="" enctype="multipart/form-data">
-                                            <input type="hidden" name="user_id" value="#session.stLoggedInUser.userID#">
+                                    <form class="user" id="cre_contact" method="post" action="" enctype="multipart/form-data">                                            
                                             <input type="hidden" name="cont_id" id="cont_id" value="">
                                             <div class="form-group row">
                                                 <div class="col-sm-3 mb-3 mb-sm-0">
@@ -248,7 +257,7 @@
                                                         placeholder="Phone">
                                                 </div>                                  
                                             </div>
-                                            <input type="submit" class="btn btn-primary btn-user btn-block" id="submit_crteCon" name="submit_crteCon" value="Create Account">                               
+                                            <input type="submit" class="btn btn-primary btn-user btn-block" id="submit_crteCon" name="submit_crteCon" value="Create Contact">                               
                                             <hr>                               
                                     </form>
                                 </div>
@@ -377,7 +386,7 @@
         <script src="vendor/jquery/jquery.min.js"></script>
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="js/contact.js"></script>
-        <script>             
+        <script>                        
             <cfif structKeyExists(URL,'From')>
                 <cfif URL.From IS "View">
                     $('##ViewModal').modal('show');
