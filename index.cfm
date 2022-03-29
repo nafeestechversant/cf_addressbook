@@ -11,6 +11,7 @@
 </cfif>
 <cfinvoke component="login" method="getContacts" returnvariable="getContactLists"></cfinvoke>
 <cfinvoke component="login" method="getUserImage" returnvariable="getUsrImage"></cfinvoke>
+<cfinvoke component="login" method="getOrmContacts" returnvariable="ContactLists"></cfinvoke>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -22,6 +23,7 @@
         <title>Address Book - List</title>    
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">    
         <link href="css/sb-admin-2.min.css" rel="stylesheet">
+        <link href="css/gray.css" rel="stylesheet" />
         <link href="css/style.css" rel="stylesheet">
     </head>
 <body class="bg-gradient-primary">
@@ -29,7 +31,9 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-xl-12 col-lg-12 col-md-9">                          
-                    <nav class="navbar navbar-expand navbar-light bg-blue topbar mb-4 static-top shadow">                                                   
+                    <nav class="navbar navbar-expand navbar-light bg-blue topbar mb-4 static-top shadow">                        
+                        <img class="logo-img" src="img/logo.png" alt="...">                       
+                        <h3 class="text-white-600">Address Book</h3>                                                                          
                         <ul class="navbar-nav ml-auto">                                                                                          
                             <li class="nav-item dropdown no-arrow">
                                 <a class="nav-link dropdown-toggle" href="##" id="userDropdown" role="button"
@@ -111,30 +115,30 @@
                                             </tr>
                                         </thead>                                              
                                         <tbody>
-                                            <cfloop query="variables.getContactLists"> 
+                                            <cfloop array="#ContactLists#" item="ContactLists"> 
                                                 <tr>
                                                     <td class="image-td">
-                                                        <cfif variables.getContactLists.contact_image EQ ''>
+                                                        <cfif #ContactLists.getContact_image()# EQ ''>
                                                             <img class="no-img2" src="img/RAY.jpg" width="25%" alt="...">
                                                         <cfelse>  
-                                                            <img class="no-img2" src="img/contact-img/#variables.getContactLists.contact_image#" width="25%" alt="...">                                     
+                                                            <img class="no-img2" src="img/contact-img/#ContactLists.getContact_image()#" width="25%" alt="...">                                     
                                                         </cfif> 
                                                     </td>
-                                                    <td>#getContactLists.firstname#</td>
-                                                    <td>#getContactLists.contact_email#</td>
-                                                    <td>#getContactLists.contact_phone#</td>
+                                                    <td>#ContactLists.getFirstname()#</td>
+                                                    <td>#ContactLists.getContact_email()#</td>
+                                                    <td>#ContactLists.getContact_phone()#</td>
                                                     <td>
-                                                        <a class="btn btn-primary btn-action-cnt btn-action-edit" data-id="#getContactLists.contact_id#" data-toggle="modal" data-target="##CreateModal">                                   
+                                                        <a class="btn btn-primary btn-action-cnt btn-action-edit" data-id="#ContactLists.getContact_id()#" data-toggle="modal" data-target="##CreateModal">                                   
                                                             Edit
                                                         </a>
                                                     </td>
                                                     <td>
-                                                        <a class="btn btn-primary btn-action-cnt " href="javascript:confirmDelete(#getContactLists.contact_id#);">                                   
+                                                        <a class="btn btn-primary btn-action-cnt " href="javascript:confirmDelete(#ContactLists.getContact_id()#);">                                   
                                                             Delete
                                                         </a>
                                                     </td>
                                                     <td>
-                                                        <a class="btn btn-primary btn-action-cnt" href="javascript:viewContact(#getContactLists.contact_id#);">                                   
+                                                        <a class="btn btn-primary btn-action-cnt" href="javascript:viewContact(#ContactLists.getContact_id()#);">                                   
                                                             View
                                                         </a>
                                                     </td>
@@ -155,7 +159,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Create Contact</h5>
+                        <h5 class="modal-title" id="contact_head">Create Contact</h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">X</span>
                         </button>
@@ -178,6 +182,7 @@
                                     <cfparam name="form.cont_gender" default=""  type="string">
                                     <cfparam name="form.cont_dob" default=""  type="string">
                                     <cfparam name="form.cont_photo" default=""  type="string">
+                                    <cfparam name="form.cont_image" default=""  type="string">
                                     <cfparam name="form.cont_addr" default=""  type="string">
                                     <cfparam name="form.cont_street" default=""  type="string">
                                     <cfparam name="form.cont_pin" default=""  type="string">
@@ -185,10 +190,11 @@
                                     <cfparam name="form.cont_phone" default=""  type="string">
                                     <form class="user" id="cre_contact" method="post" action="" enctype="multipart/form-data">                                            
                                             <input type="hidden" name="cont_id" id="cont_id" value="">
+                                            <input type="hidden" name="cont_image" id="cont_image" value="">
                                             <div class="form-group row">
                                                 <div class="col-sm-3 mb-3 mb-sm-0">
                                                     <label>Title</label>
-                                                    <select class="form-control form-select" name="cont_title" id="cont_title">                                           
+                                                    <select class="form-control form-select" name="cont_title" id="cont_title" data-bvalidator="required">                                           
                                                         <option value=""></option>
                                                         <option value="Mr">Mr</option>
                                                         <option value="Mrs">Mrs</option>
@@ -198,18 +204,18 @@
                                                 <div class="col-sm-5 mb-3 mb-sm-0">
                                                     <label>First Name</label>
                                                     <input type="text" class="form-control form-control-user" name="cont_firstname" id="cont_firstname"
-                                                        placeholder="First Name">
+                                                        placeholder="First Name" data-bvalidator="required">
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label>Last Name</label>
                                                     <input type="text" class="form-control form-control-user" name="cont_lastname" id="cont_lastname"
-                                                        placeholder="Last Name">
+                                                        placeholder="Last Name" data-bvalidator="required">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <div class="col-sm-6 mb-3 mb-sm-0">
                                                     <label>Gender</label>
-                                                    <select class="form-control form-select" name="cont_gender" id="cont_gender">                                            
+                                                    <select class="form-control form-select" name="cont_gender" id="cont_gender" data-bvalidator="required">                                            
                                                         <option value=""></option>
                                                         <option value="male">Male</option>
                                                         <option value="female">Female</option>                                            
@@ -217,7 +223,7 @@
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <label>Date of Birth</label>
-                                                    <input type="date" class="form-control form-control-user" id="cont_dob" name="cont_dob" placeholder="">
+                                                    <input type="date" class="form-control form-control-user" id="cont_dob" name="cont_dob" placeholder="" data-bvalidator="required">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -232,29 +238,29 @@
                                                 <div class="col-sm-5 mb-3 mb-sm-0">
                                                     <label>Address</label>
                                                     <input type="text" class="form-control form-control-user"
-                                                        id="cont_addr" name="cont_addr" placeholder="Address">
+                                                        id="cont_addr" name="cont_addr" placeholder="Address" data-bvalidator="required">
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label>Street</label>
                                                     <input type="text" name="cont_street" class="form-control form-control-user"
-                                                        id="cont_street" placeholder="Street">
+                                                        id="cont_street" placeholder="Street" data-bvalidator="required">
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <label>Pincode</label>
                                                     <input type="text" name="cont_pin" class="form-control form-control-user"
-                                                        id="cont_pin" placeholder="Pincode">
+                                                        id="cont_pin" placeholder="Pincode" data-bvalidator="number,required">
                                                 </div>
                                             </div>
                                             <div class="form-group  row">
                                                 <div class="col-sm-6 mb-3 mb-sm-0">
                                                     <label>Email</label>
-                                                    <input type="email" name="cont_email" id="cont_email" class="form-control form-control-user" id="exampleInputEmail"
-                                                        placeholder="Email Address">
+                                                    <input type="text" name="cont_email" id="cont_email" class="form-control form-control-user" id="exampleInputEmail"
+                                                        placeholder="Email Address" data-bvalidator="required,email">
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <label>Phone</label>
                                                     <input type="text" name="cont_phone" id="cont_phone" class="form-control form-control-user" id="exampleInputEmail"
-                                                        placeholder="Phone">
+                                                        placeholder="Phone" data-bvalidator="number,required">
                                                 </div>                                  
                                             </div>
                                             <input type="submit" class="btn btn-primary btn-user btn-block" id="submit_crteCon" name="submit_crteCon" value="Create Contact">                               
@@ -384,6 +390,9 @@
         </div>
         <!-- Bootstrap core JavaScript-->
         <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="js/jquery.bvalidator.min.js"></script>
+        <script src="js/default.min.js"></script>
+        <script src="js/gray.js"></script>
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="js/contact.js"></script>
         <script>                        

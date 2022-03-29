@@ -22,8 +22,9 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xl-12 col-lg-12 col-md-9">
-                        <nav class="navbar navbar-expand navbar-light bg-blue topbar mb-4 static-top shadow">                                   
-                            <!-- Topbar Navbar -->
+                        <nav class="navbar navbar-expand navbar-light bg-blue topbar mb-4 static-top shadow">
+                            <img class="logo-img" src="img/logo.png" alt="...">                       
+                            <h3 class="text-white-600">Address Book</h3>                                                                
                             <ul class="navbar-nav ml-auto">                     
                                 <!-- Nav Item - Alerts -->
                                 <li class="nav-item dropdown no-arrow mx-1">
@@ -85,10 +86,10 @@
                                                 </div>
                                                  <input type="submit" class="btn btn-primary btn-user btn-block login-btn" id="fld_LoginSubmit" name="fld_LoginSubmit" value="Login">                                               
                                                 <hr>
-                                                <a href="index.html" class="btn btn-google btn-user btn-block">
+                                                <a href="##" class="btn btn-google btn-user btn-block">
                                                     <i class="fab fa-google fa-fw"></i> Login with Google
                                                 </a>
-                                                <a href="index.html" class="btn btn-facebook btn-user btn-block">
+                                                <a href="##" class="btn btn-facebook btn-user btn-block">
                                                     <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
                                                 </a>
                                             </form>
