@@ -69,6 +69,7 @@
 		<cfset variables.cont_gender = form.cont_gender/>	
 		<cfset variables.cont_dob = form.cont_dob/>
 		<cfset variables.cont_photo = form.cont_photo/>
+		<cfset variables.cont_image = form.cont_image/>
 		<cfset variables.cont_addr = form.cont_addr/>
 		<cfset variables.cont_street = form.cont_street/>
 		<cfset variables.cont_pin = form.cont_pin/>
@@ -105,7 +106,7 @@
 		<cfif variables.cont_phone EQ ''>
 			<cfset arrayAppend(errorMessage, 'Please Enter Phone')>
 		</cfif>
-		<cfset variables.cont_imge = "">
+		<cfset variables.cont_imge = variables.cont_image>
 		<cfif structKeyExists(form,"cont_photo") and len(trim(form.cont_photo))>
 			<cfset variables.thisDir = expandPath(".")>
 			<cffile action="upload" fileField="form.cont_photo" destination="#variables.thisDir#/img/contact-img" result="fileUpload" nameconflict="overwrite">
@@ -137,12 +138,12 @@
 				lastname = <cfqueryparam value="#variables.cont_lastname#" cfsqltype="cf_sql_varchar" />,
 				gender = <cfqueryparam value="#variables.cont_gender#" cfsqltype="cf_sql_varchar" />,
 				dateof_birth = <cfqueryparam value="#variables.cont_dob#" cfsqltype="CF_SQL_DATE" />,
-				contact_image = <cfqueryparam value="#variables.cont_photo#" cfsqltype="cf_sql_varchar" />,
+				contact_image = <cfqueryparam value="#variables.cont_imge#" cfsqltype="cf_sql_varchar" />,
 				address = <cfqueryparam value="#variables.cont_addr#" cfsqltype="cf_sql_varchar" />,
 				street = <cfqueryparam value="#variables.cont_street#" cfsqltype="cf_sql_varchar" />,
 				pincode = <cfqueryparam value="#variables.cont_pin#" cfsqltype="cf_sql_varchar" />,
 				contact_email = <cfqueryparam value="#variables.cont_email#" cfsqltype="cf_sql_varchar" />,
-				contact_phone  = <cfqueryparam value="#variables.cont_phone#" cfsqltype="cf_sql_varchar" /> WHERE contact_id = #variables.cont_id#	AND user_id = #variables.user_id#			
+				contact_phone  = <cfqueryparam value="#variables.cont_phone#" cfsqltype="cf_sql_varchar" /> WHERE contact_id = #variables.cont_id#	AND user_id = #session.stLoggedInUser.userID#			
 			</cfquery>			
 		</cfif>
 		<cfreturn variables.errorMessage />						
@@ -199,6 +200,11 @@
 			SELECT image_name FROM users  WHERE userid = <cfqueryparam value="#session.stLoggedInUser.userID#" cfsqltype="cf_sql_integer" />
 		</cfquery>		
 		<cfreturn local.rs_getUserImage />
-	</cffunction>		 
+	</cffunction>
+
+	<cffunction name="getOrmContacts" access="public" returnType="any" output="true">              
+          <cfset variables.getcontacts = EntityLoad('Contact',{user_id=session.stLoggedInUser.userID},'contact_id asc')>
+          <cfreturn variables.getcontacts>    
+     </cffunction>		 
 </cfcomponent>
 

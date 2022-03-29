@@ -20,6 +20,8 @@
                 <div class="row">
                     <div class="col-xl-12 col-lg-12 col-md-9">
                         <nav class="navbar navbar-expand navbar-light bg-blue topbar mb-4 static-top shadow">                                                      
+                            <img class="logo-img" src="img/logo.png" alt="...">                       
+                            <h3 class="text-white-600">Address Book</h3> 
                             <ul class="navbar-nav ml-auto">                                             
                                 <li class="nav-item dropdown no-arrow mx-1">
                                     <a class="" href="register.cfm" id="userDropdown" role="button" aria-haspopup="true" aria-expanded="false">

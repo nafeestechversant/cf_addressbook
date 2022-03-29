@@ -2,6 +2,8 @@
 <cfcomponent output="false">
     <cfset this.name = 'Address Book' />
 	<cfset this.applicationTimeout = createtimespan(0,2,0,0) />    
+	<cfset this.ormenabled = "true">
+	<cfset this.ormsettings = {datasource="cf_addressbook"}> 
     <cfset this.datasource = 'cf_addressbook' /> 
 	<cfset this.sessionManagement = true />
 	<cfset this.sessionTimeout = createTimespan(0,0,30,0) />  

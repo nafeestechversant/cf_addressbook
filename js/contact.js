@@ -1,3 +1,7 @@
+$(document).ready(function() {
+    $('#cre_contact').bValidator();
+});
+
 function confirmDelete(pageID) {
     if (window.confirm('Are you sure you want to delete this Contact?')) {
         window.location.href = 'index.cfm?From=Delete&ID=' + pageID;
@@ -24,6 +28,8 @@ function readURL(input) {
 }
 $('.btn-action-edit').click(function() {
     var contact_id = $(this).data('id');
+    $('#contact_head').text("Edit Contact");
+    $('#submit_crteCon').val("Edit Contact")
     $.ajax({
         type: "POST",
         url: "login.cfc?method=getContactBy",
@@ -31,14 +37,14 @@ $('.btn-action-edit').click(function() {
         dataType: "json",
         cache: false,
         success: function(data) {
-            console.log(data[0]);
+            console.log(data[0].CONTACT_IMAGE);
             var Dateofb = new Date(data[0].DATEOF_BIRTH);
             $('#cont_title option[value="' + data[0].TITLE + '"]').prop("selected", true);
             $('#cont_firstname').val(data[0].FIRSTNAME);
             $('#cont_lastname').val(data[0].LASTNAME);
             $('#cont_gender option[value="' + data[0].GENDER + '"]').prop("selected", true);
             $('#cont_dob').val(convertDate(Dateofb));
-            // $('#cont_photo').val(data[0].CONTACT_IMAGE);
+            $('#cont_image').val(data[0].CONTACT_IMAGE);
             $('#cont_addr').val(data[0].ADDRESS);
             $('#cont_street').val(data[0].STREET);
             $('#cont_pin').val(data[0].PINCODE);
@@ -46,7 +52,7 @@ $('.btn-action-edit').click(function() {
             $('#cont_phone').val(data[0].CONTACT_PHONE);
             $('#cont_id').val(data[0].CONTACT_ID);
 
-            // $('#cnt-img').attr('src', '');
+
             if (data[0].CONTACT_IMAGE != '') {
                 $('#cnt-img').attr('src', 'img/contact-img/' + data[0].CONTACT_IMAGE);
             } else {
@@ -102,6 +108,8 @@ $("#my_file").on('change', function() {
 });
 
 $("#id-create-contact").click(function() {
+    $('#contact_head').text("Create Contact");
+    $('#submit_crteCon').val("Create Contact")
     $('#cre_contact').trigger("reset");
 
 });
