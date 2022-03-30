@@ -10,11 +10,6 @@ function confirmDelete(pageID) {
     }
 }
 
-function viewContact(contactID) {
-    window.location.href = 'index.cfm?From=View&ID=' + contactID;
-
-}
-
 function readURL(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -29,7 +24,10 @@ function readURL(input) {
 $('.btn-action-edit').click(function() {
     var contact_id = $(this).data('id');
     $('#contact_head').text("Edit Contact");
-    $('#submit_crteCon').val("Edit Contact")
+    $('#submit_crteCon').val("Edit Contact");
+    // $('#cre_contact').data('bValidator').reset('#cont_title');
+    //$('#cre_contact').data('bValidator').destroy();
+    //$('#cre_contact').bValidator().destroy();
     $.ajax({
         type: "POST",
         url: "login.cfc?method=getContactBy",
@@ -57,6 +55,36 @@ $('.btn-action-edit').click(function() {
                 $('#cnt-img').attr('src', 'img/contact-img/' + data[0].CONTACT_IMAGE);
             } else {
                 $('#cnt-img').attr('src', 'img/RAY.jpg');
+            }
+
+        }
+    });
+});
+
+$('.btn-action-view').click(function() {
+    var contact_id = $(this).data('id');
+    $.ajax({
+        type: "POST",
+        url: "login.cfc?method=getContactById",
+        data: "contact_id=" + contact_id,
+        dataType: "json",
+        cache: false,
+        success: function(data) {
+            var Dateofb = new Date(data[0].DATEOF_BIRTH);
+            $('#cnt-title').html(data[0].TITLE);
+            $('#cnt-firstname').html(data[0].FIRSTNAME);
+            $('#cnt-lastname').html(data[0].LASTNAME);
+            $('#cnt-gender').html(data[0].GENDER);
+            $('#cnt-dob').html(convertDate(Dateofb));
+            $('#cnt-address').html(data[0].ADDRESS);
+            $('#cnt-street').html(data[0].STREET);
+            $('#cnt-pincode').html(data[0].PINCODE);
+            $('#cnt-email').html(data[0].CONTACT_EMAIL);
+            $('#cnt-phone').html(data[0].CONTACT_PHONE);
+            if (data[0].CONTACT_IMAGE != '') {
+                $('#view-cntimage').attr('src', 'img/contact-img/' + data[0].CONTACT_IMAGE);
+            } else {
+                $('#view-cntimage').attr('src', 'img/RAY.jpg');
             }
 
         }
@@ -111,5 +139,7 @@ $("#id-create-contact").click(function() {
     $('#contact_head').text("Create Contact");
     $('#submit_crteCon').val("Create Contact")
     $('#cre_contact').trigger("reset");
-
+    // $('#form-reset').trigger('click');
+    // $('#cre_contact').bValidator("reset");
+    $('#cnt-img').attr('src', 'img/RAY.jpg');
 });

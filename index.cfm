@@ -138,7 +138,7 @@
                                                         </a>
                                                     </td>
                                                     <td>
-                                                        <a class="btn btn-primary btn-action-cnt" href="javascript:viewContact(#ContactLists.getContact_id()#);">                                   
+                                                        <a class="btn btn-primary btn-action-cnt btn-action-view" data-id="#ContactLists.getContact_id()#" data-toggle="modal" data-target="##ViewModal">                                   
                                                             View
                                                         </a>
                                                     </td>
@@ -173,7 +173,6 @@
                                         <cfloop array="#errorMessage#" index="message">
                                             <p  class="red">#message#</p>
                                         </cfloop>
-
                                     </cfif>                                    
                                     <cfparam name="form.cont_id" default=""  type="string">
                                     <cfparam name="form.cont_title" default=""  type="string">
@@ -189,82 +188,83 @@
                                     <cfparam name="form.cont_email" default=""  type="string">
                                     <cfparam name="form.cont_phone" default=""  type="string">
                                     <form class="user" id="cre_contact" method="post" action="" enctype="multipart/form-data">                                            
-                                            <input type="hidden" name="cont_id" id="cont_id" value="">
-                                            <input type="hidden" name="cont_image" id="cont_image" value="">
-                                            <div class="form-group row">
-                                                <div class="col-sm-3 mb-3 mb-sm-0">
-                                                    <label>Title</label>
-                                                    <select class="form-control form-select" name="cont_title" id="cont_title" data-bvalidator="required">                                           
-                                                        <option value=""></option>
-                                                        <option value="Mr">Mr</option>
-                                                        <option value="Mrs">Mrs</option>
-                                                        <option value="Ms">Ms</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-sm-5 mb-3 mb-sm-0">
-                                                    <label>First Name</label>
-                                                    <input type="text" class="form-control form-control-user" name="cont_firstname" id="cont_firstname"
-                                                        placeholder="First Name" data-bvalidator="required">
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <label>Last Name</label>
-                                                    <input type="text" class="form-control form-control-user" name="cont_lastname" id="cont_lastname"
-                                                        placeholder="Last Name" data-bvalidator="required">
-                                                </div>
+                                        <input type="hidden" name="cont_id" id="cont_id" value="">
+                                        <input type="hidden" name="cont_image" id="cont_image" value="">
+                                        <div class="form-group row">
+                                            <div class="col-sm-3 mb-3 mb-sm-0">
+                                                <label>Title</label>
+                                                <select class="form-control form-select" name="cont_title" id="cont_title" data-bvalidator="required">                                           
+                                                    <option value=""></option>
+                                                    <option value="Mr">Mr</option>
+                                                    <option value="Mrs">Mrs</option>
+                                                    <option value="Ms">Ms</option>
+                                                </select>
                                             </div>
-                                            <div class="form-group row">
-                                                <div class="col-sm-6 mb-3 mb-sm-0">
-                                                    <label>Gender</label>
-                                                    <select class="form-control form-select" name="cont_gender" id="cont_gender" data-bvalidator="required">                                            
-                                                        <option value=""></option>
-                                                        <option value="male">Male</option>
-                                                        <option value="female">Female</option>                                            
-                                                    </select>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <label>Date of Birth</label>
-                                                    <input type="date" class="form-control form-control-user" id="cont_dob" name="cont_dob" placeholder="" data-bvalidator="required">
-                                                </div>
+                                            <div class="col-sm-5 mb-3 mb-sm-0">
+                                                <label>First Name</label>
+                                                <input type="text" class="form-control form-control-user" name="cont_firstname" id="cont_firstname"
+                                                    placeholder="First Name" data-bvalidator="required">
                                             </div>
-                                            <div class="form-group row">
-                                                <div class="col-sm-6 mb-3 mb-sm-0">
-                                                    <label>Upload Photo</label>
-                                                    <input type="file" name="cont_photo" class="form-control form-control-user"
-                                                        id="cont_photo" placeholder="" onchange="readURL(this);">
-                                                </div>                            
+                                            <div class="col-sm-4">
+                                                <label>Last Name</label>
+                                                <input type="text" class="form-control form-control-user" name="cont_lastname" id="cont_lastname"
+                                                    placeholder="Last Name" data-bvalidator="required">
                                             </div>
-                                            <h5 class="font-weight-bold text-primary">Contact Details</h5>                               
-                                            <div class="form-group row">                                    
-                                                <div class="col-sm-5 mb-3 mb-sm-0">
-                                                    <label>Address</label>
-                                                    <input type="text" class="form-control form-control-user"
-                                                        id="cont_addr" name="cont_addr" placeholder="Address" data-bvalidator="required">
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <label>Street</label>
-                                                    <input type="text" name="cont_street" class="form-control form-control-user"
-                                                        id="cont_street" placeholder="Street" data-bvalidator="required">
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <label>Pincode</label>
-                                                    <input type="text" name="cont_pin" class="form-control form-control-user"
-                                                        id="cont_pin" placeholder="Pincode" data-bvalidator="number,required">
-                                                </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                                <label>Gender</label>
+                                                <select class="form-control form-select" name="cont_gender" id="cont_gender" data-bvalidator="required">                                            
+                                                    <option value=""></option>
+                                                    <option value="male">Male</option>
+                                                    <option value="female">Female</option>                                            
+                                                </select>
                                             </div>
-                                            <div class="form-group  row">
-                                                <div class="col-sm-6 mb-3 mb-sm-0">
-                                                    <label>Email</label>
-                                                    <input type="text" name="cont_email" id="cont_email" class="form-control form-control-user" id="exampleInputEmail"
-                                                        placeholder="Email Address" data-bvalidator="required,email">
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <label>Phone</label>
-                                                    <input type="text" name="cont_phone" id="cont_phone" class="form-control form-control-user" id="exampleInputEmail"
-                                                        placeholder="Phone" data-bvalidator="number,required">
-                                                </div>                                  
+                                            <div class="col-sm-6">
+                                                <label>Date of Birth</label>
+                                                <input type="date" class="form-control form-control-user" id="cont_dob" name="cont_dob" placeholder="" data-bvalidator="required">
                                             </div>
-                                            <input type="submit" class="btn btn-primary btn-user btn-block" id="submit_crteCon" name="submit_crteCon" value="Create Contact">                               
-                                            <hr>                               
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                                <label>Upload Photo</label>
+                                                <input type="file" name="cont_photo" class="form-control form-control-user"
+                                                    id="cont_photo" placeholder="" onchange="readURL(this);">
+                                            </div>                            
+                                        </div>
+                                        <h5 class="font-weight-bold text-primary">Contact Details</h5>                               
+                                        <div class="form-group row">                                    
+                                            <div class="col-sm-5 mb-3 mb-sm-0">
+                                                <label>Address</label>
+                                                <input type="text" class="form-control form-control-user"
+                                                    id="cont_addr" name="cont_addr" placeholder="Address" data-bvalidator="required">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label>Street</label>
+                                                <input type="text" name="cont_street" class="form-control form-control-user"
+                                                    id="cont_street" placeholder="Street" data-bvalidator="required">
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <label>Pincode</label>
+                                                <input type="text" name="cont_pin" class="form-control form-control-user"
+                                                    id="cont_pin" placeholder="Pincode" data-bvalidator="number,required">
+                                            </div>
+                                        </div>
+                                        <div class="form-group  row">
+                                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                                <label>Email</label>
+                                                <input type="text" name="cont_email" id="cont_email" class="form-control form-control-user" id="exampleInputEmail"
+                                                    placeholder="Email Address" data-bvalidator="required,email">
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label>Phone</label>
+                                                <input type="text" name="cont_phone" id="cont_phone" class="form-control form-control-user" id="exampleInputEmail"
+                                                    placeholder="Phone" data-bvalidator="number,required">
+                                            </div>                                  
+                                        </div>
+                                        <input type="submit" class="btn btn-primary btn-user btn-block" id="submit_crteCon" name="submit_crteCon" value="Create Contact">                               
+                                        <button type="reset" class="no-display" id="form-reset">Reset</button>
+                                        <hr>                               
                                     </form>
                                 </div>
                                 <div class="col-xl-3 col-lg-3 pr-lg-0 no-img3">
@@ -289,59 +289,50 @@
                     </div>
                    <div class="modal-body">
                         <div class="container">
-                            <div class="row">
-                                <cfif structKeyExists(URL,'From')>
-                                    <cfif URL.From IS "View">
-                                        <cfinvoke component="login" method="getContactById" returnvariable="getContactId"></cfinvoke> 
-                                            <div class="col-xl-9 col-lg-9 pl-lg-0 pr-lg-0">                       
-                                                <div class="table-responsive">                                                                                        
-                                                    <table class="table bor-none" id="dataTable" width="100%" cellspacing="0">                                                                                        
-                                                        <tbody>
-                                                            <tr><td><label>Title</label></td>                                                    
-                                                                <td>#variables.getContactId.title#</td>                                                
-                                                            </tr>
-                                                            <tr><td><label>First Name</label></td>                                                                                               
-                                                                <td>#variables.getContactId.firstname#</td>                                                
-                                                            </tr>
-                                                            <tr><td><label>Last Name</label></td>                                                                                                                
-                                                                <td>#variables.getContactId.lastname#</td>                                                
-                                                            </tr>
-                                                            <tr><td><label>Gender</label></td>
-                                                                <td>#variables.getContactId.gender#</td>                                                
-                                                            </tr>
-                                                            <tr><td><label>Date of Birth</label></td>                                                                                                                
-                                                                <td>#variables.getContactId.dateof_birth#</td>                                                
-                                                            </tr>
-                                                            <tr><td><label>Address</label></td>                                                                                                                
-                                                                <td>#variables.getContactId.address#</td>                                                
-                                                            </tr>
-                                                            <tr><td><label>Street</label></td>                                                                                                                
-                                                                <td>#variables.getContactId.street#</td>                                                
-                                                            </tr>
-                                                            <tr><td><label>Pincode</label></td>                                                                                                                
-                                                                <td>#variables.getContactId.pincode#</td>                                                
-                                                            </tr>
-                                                            <tr><td><label>Email</label></td>                                                                                                                
-                                                                <td>#variables.getContactId.contact_email#</td>                                                
-                                                            </tr>
-                                                            <tr><td><label>Phone</label></td>                                                                                                            
-                                                                <td>#variables.getContactId.contact_phone#</td>                                                
-                                                            </tr>
-                                                        </tbody>                                                                                                      
-                                                    </table>                                                                                                        
-                                                </div>                                                                                                                                                                           
-                                            </div>
-                                            <div class="col-xl-3 col-lg-3 pr-lg-0 no-img3">
-                                                <cfif variables.getContactId.contact_image EQ ''>
-                                                    <img class="no-img" src="img/RAY.jpg" width="75%" alt="...">
-                                                <cfelse>  
-                                                    <img class="no-img" src="img/contact-img/#variables.getContactId.contact_image#" width="100%" height="50%" alt="...">                                     
-                                                </cfif>                                    
-                                            </div>
-                                    </cfif>
-                                </cfif>    
+                            <div class="row">                                                                      
+                                <div class="col-xl-9 col-lg-9 pl-lg-0 pr-lg-0">                       
+                                    <div class="table-responsive">                                                                                        
+                                        <table class="table bor-none" id="dataTable" width="100%" cellspacing="0">                                                                                        
+                                            <tbody>
+                                                <tr><td><label>Title</label></td>                                                    
+                                                    <td id="cnt-title"></td>                                                
+                                                </tr>
+                                                <tr><td><label>First Name</label></td>                                                                                               
+                                                    <td id="cnt-firstname"></td>                                                
+                                                </tr>
+                                                <tr><td><label>Last Name</label></td>                                                                                                                
+                                                    <td id="cnt-lastname"></td>                                                
+                                                </tr>
+                                                <tr><td><label>Gender</label></td>
+                                                    <td id="cnt-gender"></td>                                                
+                                                </tr>
+                                                <tr><td><label>Date of Birth</label></td>                                                                                                                
+                                                    <td id="cnt-dob"></td>                                                
+                                                </tr>
+                                                <tr><td><label>Address</label></td>                                                                                                                
+                                                    <td id="cnt-address"></td>                                                
+                                                </tr>
+                                                <tr><td><label>Street</label></td>                                                                                                                
+                                                    <td id="cnt-street"></td>                                                
+                                                </tr>
+                                                <tr><td><label>Pincode</label></td>                                                                                                                
+                                                    <td id="cnt-pincode"></td>                                                
+                                                </tr>
+                                                <tr><td><label>Email</label></td>                                                                                                                
+                                                    <td id="cnt-email"></td>                                                
+                                                </tr>
+                                                <tr><td><label>Phone</label></td>                                                                                                            
+                                                    <td id="cnt-phone"></td>                                                
+                                                </tr>
+                                            </tbody>                                                                                                      
+                                        </table>                                                                                                        
+                                    </div>                                                                                                                                                                           
+                                </div>
+                                <div class="col-xl-3 col-lg-3 pr-lg-0 no-img3">                                   
+                                    <img class="no-img" id="view-cntimage" src="img/RAY.jpg" width="75%" alt="...">                                                                                                                                                 
+                                </div>                                 
                             </div>
-                         </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>                        
@@ -377,7 +368,7 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
+                            <span aria-hidden="true">X</span>
                         </button>
                     </div>
                     <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
@@ -394,14 +385,7 @@
         <script src="js/default.min.js"></script>
         <script src="js/gray.js"></script>
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="js/contact.js"></script>
-        <script>                        
-            <cfif structKeyExists(URL,'From')>
-                <cfif URL.From IS "View">
-                    $('##ViewModal').modal('show');
-                </cfif>
-            </cfif>            
-        </script>
+        <script src="js/contact.js"></script>      
     </cfoutput>
 </body>
 </html>

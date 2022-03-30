@@ -1,9 +1,9 @@
-$(document).ready(function () {
+$(document).ready(function() {
 
     // Validate Username
     $('#usercheck').hide();
     let usernameError = true;
-    $('#fld_userName').keyup(function () {
+    $('#fld_userName').keyup(function() {
         validateUsername();
     });
 
@@ -13,15 +13,14 @@ $(document).ready(function () {
             $('#usercheck').show();
             usernameError = false;
             return false;
-        }
-        else {
+        } else {
             $('#usercheck').hide();
         }
     }
 
     $('#fullNamecheck').hide();
     let fullnameError = true;
-    $('#fld_fullName').keyup(function () {
+    $('#fld_fullName').keyup(function() {
         validateFullname();
     });
 
@@ -31,8 +30,7 @@ $(document).ready(function () {
             $('#fullNamecheck').show();
             fullnameError = false;
             return false;
-        }
-        else {
+        } else {
             $('#fullNamecheck').hide();
         }
     }
@@ -40,9 +38,10 @@ $(document).ready(function () {
     // Validate Email
     $('#emailvalid').hide();
     let emailError = true;
-    $('#fld_userEmail').keyup(function () {
+    $('#fld_userEmail').keyup(function() {
         validateEmail();
     });
+
     function validateEmail() {
         let emailValue =
             $('#fld_userEmail').val();
@@ -50,8 +49,7 @@ $(document).ready(function () {
             $('#emailvalid').show();
             emailError = false;
             return false;
-        }
-        else {
+        } else {
             $('#emailvalid').hide();
         }
     }
@@ -59,9 +57,10 @@ $(document).ready(function () {
     // Validate Password
     $('#passcheck').hide();
     let passwordError = true;
-    $('#fld_userPwd').keyup(function () {
+    $('#fld_userPwd').keyup(function() {
         validatePassword();
     });
+
     function validatePassword() {
         let passwordValue =
             $('#fld_userPwd').val();
@@ -69,8 +68,7 @@ $(document).ready(function () {
             $('#passcheck').show();
             passwordError = false;
             return false;
-        }
-        else {
+        } else {
             $('#passcheck').hide();
         }
     }
@@ -78,9 +76,10 @@ $(document).ready(function () {
     // Validate Confirm Password
     $('#conpasscheck').hide();
     let confirmPasswordError = true;
-    $('#fld_userCnfPwd').keyup(function () {
+    $('#fld_userCnfPwd').keyup(function() {
         validateConfirmPassword();
     });
+
     function validateConfirmPassword() {
         let confirmPasswordValue =
             $('#fld_userCnfPwd').val();
@@ -106,12 +105,17 @@ $(document).ready(function () {
     }
 
     // Submit button
-    $('#fld_FormSubmit').click(function () {
+    $('#fld_FormSubmit').click(function() {
         validateFullname();
         validateUsername();
         validatePassword();
         validateConfirmPassword();
-        validateEmail();       
+        validateEmail();
+        console.log(usernameError);
+        console.log(passwordError);
+        console.log(confirmPasswordError);
+        console.log(emailError);
+        console.log(fullnameError);
         if ((usernameError == true) &&
             (passwordError == true) &&
             (confirmPasswordError == true) &&
@@ -123,7 +127,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#fld_LoginSubmit').click(function () {
+    $('#fld_LoginSubmit').click(function() {
         validateUsername();
         validatePassword();
         if ((usernameError == true) &&
@@ -133,5 +137,5 @@ $(document).ready(function () {
             return false;
         }
 
-    });    
+    });
 });

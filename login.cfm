@@ -1,9 +1,9 @@
 <cfif structKeyExists(URL,'logout')>
     <cfset structdelete(session,'stLoggedInUser') />
 </cfif>
-    <cfif structKeyExists(form,'fld_LoginSubmit')>
-      <cfinvoke component="login" method="getLoginQuery" returnvariable="errorMessage"></cfinvoke>             
-    </cfif>
+<cfif structKeyExists(form,'fld_LoginSubmit')>
+    <cfinvoke component="login" method="getLoginQuery" returnvariable="errorMessage"></cfinvoke>             
+</cfif>
 <!DOCTYPE html>
 <html lang="en">
     <head>
