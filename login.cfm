@@ -1,9 +1,9 @@
 <cfif structKeyExists(URL,'logout')>
     <cfset structdelete(session,'stLoggedInUser') />
 </cfif>
-    <cfif structKeyExists(form,'fld_LoginSubmit')>
-      <cfinvoke component="login" method="getLoginQuery" returnvariable="errorMessage"></cfinvoke>             
-    </cfif>
+<cfif structKeyExists(form,'fld_LoginSubmit')>
+    <cfinvoke component="login" method="getLoginQuery" returnvariable="errorMessage"></cfinvoke>             
+</cfif>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -72,17 +72,15 @@
                                             </cfif>
                                             <cfparam name="form.fld_userName"  default=""  type="string">
                                             <cfparam name="form.fld_userPwd"  default=""  type="string">
-                                            <form class="user" method="post" action="">
+                                            <form class="user" id="login_form" method="post" action="">
                                                 <div class="form-group">
                                                     <input type="text" name="fld_userName" class="form-control form-control-user"
                                                         id="fld_userName" aria-describedby="emailHelp"
                                                         placeholder="Username" value="#form.fld_userName#">
-                                                    <h5 id="usercheck" class="red" >**Username is missing</h5>
                                                 </div>
                                                 <div class="form-group">
                                                     <input type="password" name="fld_userPwd" class="form-control form-control-user"
                                                         id="fld_userPwd" placeholder="Password" value="#form.fld_userPwd#">
-                                                    <h5 id="passcheck" class="red">**Password is missing</h5>
                                                 </div>
                                                  <input type="submit" class="btn btn-primary btn-user btn-block login-btn" id="fld_LoginSubmit" name="fld_LoginSubmit" value="Login">                                               
                                                 <hr>
@@ -106,7 +104,8 @@
                 </div>
             </div>    
             <script src="vendor/jquery/jquery.min.js"></script>   
-            <script src="js/validate.js"></script>
+            <script src="js/jquery.validate.js"></script>
+            <script src="js/validation.js"></script>   
         </cfoutput>
     </body>
 </html>

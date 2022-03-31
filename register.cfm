@@ -69,26 +69,21 @@
                                     <form class="user" id="register_form" method="post" action="">
                                         <div class="form-group">                                    
                                             <input type="text" class="form-control form-control-user" name="fld_fullName" id="fld_fullName"
-                                                placeholder="Full Name" value="#form.fld_fullName#">
-                                            <h5 id="fullNamecheck" class="red" >**Fullname is missing</h5>                                                                      
+                                                placeholder="Full Name">
                                         </div>
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user" name="fld_userEmail" id="fld_userEmail"
-                                                placeholder="Email Address" value="#form.fld_userEmail#">
-                                            <h5 id="emailvalid" class="red">**Your email must be a valid email</h5>                                            
+                                                placeholder="Email Address">
                                         </div>
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-user" name="fld_userName" id="fld_userName"
-                                            placeholder="UserName" value="#form.fld_userName#">
-                                            <h5 id="usercheck" class="red" >**Username is missing</h5>
+                                            placeholder="UserName" >
                                         </div>                               
                                         <div class="form-group">                                    
-                                                <input type="password" class="form-control form-control-user" name="fld_userPwd" id="fld_userPwd" placeholder="Password" value="#form.fld_userPwd#">
-                                                <h5 id="passcheck" class="red">**Please Fill the password</h5>                                                                        
+                                                <input type="password" class="form-control form-control-user" name="fld_userPwd" id="fld_userPwd" placeholder="Password" >
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user" name="fld_userCnfPwd" id="fld_userCnfPwd" placeholder="Confirm Password" value="#form.fld_userCnfPwd#">
-                                            <h5 id="conpasscheck" class="red">**Password didn't match</h5>
+                                            <input type="password" class="form-control form-control-user" name="fld_userCnfPwd" id="fld_userCnfPwd" placeholder="Confirm Password" >
                                         </div>
                                         <input type="submit" class="btn btn-primary btn-user btn-block" id="fld_FormSubmit" name="fld_FormSubmit" value="Register Account">                                                                                                
                                     </form>
@@ -103,7 +98,8 @@
                 </div>
             </div>
             <script src="vendor/jquery/jquery.min.js"></script>
-            <script src="js/validate.js"></script> 
+            <script src="js/jquery.validate.js"></script>
+            <script src="js/validation.js"></script>           
         </cfoutput>
     </body>
 </html>
