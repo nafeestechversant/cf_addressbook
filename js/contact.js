@@ -38,7 +38,7 @@ $('.btn-action-edit').click(function() {
             $('#cont_firstname').val(data[0].FIRSTNAME);
             $('#cont_lastname').val(data[0].LASTNAME);
             $('#cont_gender option[value="' + data[0].GENDER + '"]').prop("selected", true);
-            $('#cont_dob').val(convertDate(Dateofb));
+            $('#cont_dob').val(convertDate(Dateofb, "edit"));
             $('#cont_image').val(data[0].CONTACT_IMAGE);
             $('#cont_addr').val(data[0].ADDRESS);
             $('#cont_street').val(data[0].STREET);
@@ -69,7 +69,7 @@ $('.btn-action-view').click(function() {
             $('#cnt-firstname').html(data[0].FIRSTNAME);
             $('#cnt-lastname').html(data[0].LASTNAME);
             $('#cnt-gender').html(data[0].GENDER);
-            $('#cnt-dob').html(convertDate(Dateofb));
+            $('#cnt-dob').html(convertDate(Dateofb, "view"));
             $('#cnt-address').html(data[0].ADDRESS);
             $('#cnt-street').html(data[0].STREET);
             $('#cnt-pincode').html(data[0].PINCODE);
@@ -84,14 +84,18 @@ $('.btn-action-view').click(function() {
     });
 });
 
-function convertDate(date) {
+function convertDate(date, mode) {
     var yyyy = date.getFullYear().toString();
     var mm = (date.getMonth() + 1).toString();
     var dd = date.getDate().toString();
     var mmChars = mm.split('');
     var ddChars = dd.split('');
+    if (mode == "edit") {
+        return yyyy + '-' + (mmChars[1] ? mm : "0" + mmChars[0]) + '-' + (ddChars[1] ? dd : "0" + ddChars[0]);
+    } else {
+        return (ddChars[1] ? dd : "0" + ddChars[0]) + '-' + (mmChars[1] ? mm : "0" + mmChars[0]) + '-' + yyyy;
+    }
 
-    return yyyy + '-' + (mmChars[1] ? mm : "0" + mmChars[0]) + '-' + (ddChars[1] ? dd : "0" + ddChars[0]);
 }
 
 function PrintElem() {

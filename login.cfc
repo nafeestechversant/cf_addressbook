@@ -24,6 +24,12 @@
 		<cfif  variables.fld_userCnfPwd NOT EQUAL '' AND variables.fld_userPwd NOT EQUAL variables.fld_userCnfPwd>
 			<cfset arrayAppend(errorMessage, 'Confirm Password Mismatch')>
 		</cfif>
+		<cfquery name="local.checkUsername">
+			SELECT username FROM users WHERE username = <cfqueryparam value="#variables.fld_userName#" cfsqltype="cf_sql_varchar" />
+		</cfquery>
+		<cfif local.checkUsername.recordcount EQ 1>
+			<cfset arrayAppend(errorMessage, 'Username Already exists')>
+		</cfif>
 		<cfif arrayIsEmpty(errorMessage)>
 			<cfquery>INSERT INTO users (fullname,email_id,username, pwd)
 				VALUES (
