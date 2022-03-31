@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $('#cre_contact').bValidator();
+    $("#cre_contact").validate();
 });
 
 function confirmDelete(pageID) {
@@ -25,9 +25,6 @@ $('.btn-action-edit').click(function() {
     var contact_id = $(this).data('id');
     $('#contact_head').text("Edit Contact");
     $('#submit_crteCon').val("Edit Contact");
-    // $('#cre_contact').data('bValidator').reset('#cont_title');
-    //$('#cre_contact').data('bValidator').destroy();
-    //$('#cre_contact').bValidator().destroy();
     $.ajax({
         type: "POST",
         url: "login.cfc?method=getContactBy",
@@ -49,14 +46,11 @@ $('.btn-action-edit').click(function() {
             $('#cont_email').val(data[0].CONTACT_EMAIL);
             $('#cont_phone').val(data[0].CONTACT_PHONE);
             $('#cont_id').val(data[0].CONTACT_ID);
-
-
             if (data[0].CONTACT_IMAGE != '') {
                 $('#cnt-img').attr('src', 'img/contact-img/' + data[0].CONTACT_IMAGE);
             } else {
                 $('#cnt-img').attr('src', 'img/RAY.jpg');
             }
-
         }
     });
 });
@@ -86,7 +80,6 @@ $('.btn-action-view').click(function() {
             } else {
                 $('#view-cntimage').attr('src', 'img/RAY.jpg');
             }
-
         }
     });
 });
@@ -95,7 +88,6 @@ function convertDate(date) {
     var yyyy = date.getFullYear().toString();
     var mm = (date.getMonth() + 1).toString();
     var dd = date.getDate().toString();
-
     var mmChars = mm.split('');
     var ddChars = dd.split('');
 
@@ -137,9 +129,12 @@ $("#my_file").on('change', function() {
 
 $("#id-create-contact").click(function() {
     $('#contact_head').text("Create Contact");
-    $('#submit_crteCon').val("Create Contact")
+    $('#submit_crteCon').val("Create Contact");
     $('#cre_contact').trigger("reset");
-    // $('#form-reset').trigger('click');
-    // $('#cre_contact').bValidator("reset");
     $('#cnt-img').attr('src', 'img/RAY.jpg');
+});
+
+$(document).on('hide.bs.modal', '#CreateModal', function() {
+    var validator = $("#cre_contact").validate();
+    validator.resetForm();
 });
