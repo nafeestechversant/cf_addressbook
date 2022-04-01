@@ -30,6 +30,12 @@
 		<cfif local.checkUsername.recordcount EQ 1>
 			<cfset arrayAppend(errorMessage, 'Username Already exists')>
 		</cfif>
+		<cfquery name="local.checkEmail">
+			SELECT email_id FROM users WHERE email_id = <cfqueryparam value="#variables.fld_userEmail#" cfsqltype="cf_sql_varchar" />
+		</cfquery>
+		<cfif local.checkEmail.recordcount EQ 1>
+			<cfset arrayAppend(errorMessage, 'Email Already exists')>
+		</cfif>
 		<cfif arrayIsEmpty(errorMessage)>
 			<cfquery>INSERT INTO users (fullname,email_id,username, pwd)
 				VALUES (
@@ -198,7 +204,7 @@
 		<cfif uploadResult.fileWasSaved>
 			<cfset variables.user_imge = uploadResult.serverFile>
 			<cfquery>
-				UPDATE users SET image_name = '#variables.user_imge#' WHERE userid = <cfqueryparam value="#session.stLoggedInUser.userID#" cfsqltype="cf_sql_integer" />
+				UPDATE users SET image_name = <cfqueryparam value="#variables.user_imge#" cfsqltype="cf_sql_varchar" /> WHERE userid = <cfqueryparam value="#session.stLoggedInUser.userID#" cfsqltype="cf_sql_integer" />
 			</cfquery>
 		</cfif>					
 	</cffunction>

@@ -20,6 +20,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="">
         <meta name="author" content="">
+        <cfheader name="cache-control" value="no-cache, no-store, must-revalidate"> 
+        <cfheader name="pragma" value="no-cache">
+        <cfheader name="expires" value="#getHttpTimeString(now())#">
         <title>Address Book - List</title>    
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">    
         <link href="css/sb-admin-2.min.css" rel="stylesheet">        
