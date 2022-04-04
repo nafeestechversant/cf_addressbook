@@ -1,9 +1,3 @@
-<cfif structKeyExists(URL,'logout')>
-    <cfset structdelete(session,'stLoggedInUser') />
-</cfif>
-<cfif structKeyExists(form,'fld_LoginSubmit')>
-    <cfinvoke component="login" method="getLoginQuery" returnvariable="errorMessage"></cfinvoke>             
-</cfif>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -63,6 +57,11 @@
                                             <div class="text-center">
                                                 <h1 class="h4 text-gray-900 mb-4">LOGIN</h1>
                                             </div>
+                                            <cfif isDefined('errorMessage') AND errorMessage.len() >
+                                                <cfloop array="#errorMessage#" index="error">
+                                                <p class="alert alert-error">#error#</p>
+                                                </cfloop>
+                                            </cfif>
                                             <cfif isDefined('errorMessage') AND NOT arrayIsEmpty(errorMessage)>            
                                                 <cfloop array="#errorMessage#" index="message">
                                                     <p  class="red">#message#</p>
@@ -72,7 +71,7 @@
                                             </cfif>
                                             <cfparam name="form.fld_userName"  default=""  type="string">
                                             <cfparam name="form.fld_userPwd"  default=""  type="string">
-                                            <form class="user" id="login_form" method="post" action="">
+                                            <form class="user" id="login_form" method="post" action="login.cfc?method=getLoginQuery">
                                                 <div class="form-group">
                                                     <input type="text" name="fld_userName" class="form-control form-control-user"
                                                         id="fld_userName" aria-describedby="emailHelp"
@@ -104,7 +103,7 @@
                 </div>
             </div>    
             <script src="vendor/jquery/jquery.min.js"></script>   
-            <script src="js/jquery.validate.js"></script>
+<!---             <script src="js/jquery.validate.js"></script> --->
             <script src="js/validation.js"></script>   
         </cfoutput>
     </body>

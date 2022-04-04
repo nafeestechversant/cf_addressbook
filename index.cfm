@@ -1,6 +1,3 @@
-<cfif NOT structKeyExists(session,'stLoggedInUser')>
-    <cflocation url = "login.cfm">
-</cfif>
 <cfif structKeyExists(URL,'From')>
     <cfif URL.From IS "Delete">
         <cfinvoke component="login" method="deleteContact"></cfinvoke>         

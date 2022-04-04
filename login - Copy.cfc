@@ -24,16 +24,16 @@
 		<cfif  variables.fld_userCnfPwd NOT EQUAL '' AND variables.fld_userPwd NOT EQUAL variables.fld_userCnfPwd>
 			<cfset arrayAppend(errorMessage, 'Confirm Password Mismatch')>
 		</cfif>
-		<cfquery name="qry.checkUsername">
+		<cfquery name="local.checkUsername">
 			SELECT username FROM users WHERE username = <cfqueryparam value="#variables.fld_userName#" cfsqltype="cf_sql_varchar" />
 		</cfquery>
-		<cfif qry.checkUsername.recordcount EQ 1>
+		<cfif local.checkUsername.recordcount EQ 1>
 			<cfset arrayAppend(errorMessage, 'Username Already exists')>
 		</cfif>
-		<cfquery name="qry.checkEmail">
+		<cfquery name="local.checkEmail">
 			SELECT email_id FROM users WHERE email_id = <cfqueryparam value="#variables.fld_userEmail#" cfsqltype="cf_sql_varchar" />
 		</cfquery>
-		<cfif qry.checkEmail.recordcount EQ 1>
+		<cfif local.checkEmail.recordcount EQ 1>
 			<cfset arrayAppend(errorMessage, 'Email Already exists')>
 		</cfif>
 		<cfif arrayIsEmpty(errorMessage)>
@@ -50,29 +50,27 @@
 	</cffunction>
 	
    <cffunction name="getLoginQuery" access="remote" output="false">
-		<cfscript>
-			errorMessage=[];
-			var fld_userName = form["fld_userName"];
-			var fld_userPwd = form["fld_userPwd"];
-			if (fld_userName == '') 
-			{
-				errorMessage.append("Please Enter UserName");
-			}
-			if (fld_userPwd == '') 
-			{
-				errorMessage.append("Please Enter Password");
-			}
-			if(arrayIsEmpty(errorMessage)) 
-			{
-				myResult=QueryExecute(("SELECT * FROM users WHERE username=:username AND pwd=:pwd"),{username=fld_userName,pwd=fld_userPwd},
-       						{datasource="cf_addressbook"});
-			}
-			// if ( errorMessage.len() ) {							
-			// 	include "login.cfm";
-			// }
-									
-		</cfscript>	
-		<cfreturn />	
+		<cfset variables.errorMessage= arrayNew(1) />
+		<cfset variables.fld_userName = form.fld_userName/>
+		<cfset variables.fld_userPwd = form.fld_userPwd/>
+		<cfif variables.fld_userName EQ ''>
+			<cfset arrayAppend(errorMessage, 'Please Enter UserName')>
+		</cfif>
+		<cfif variables.fld_userPwd EQ ''>
+			<cfset arrayAppend(errorMessage, 'Please Enter Password')>
+		</cfif>
+		<cfif arrayIsEmpty(errorMessage)>
+			<cfquery name="local.checkLogin">
+				SELECT * FROM users 
+					WHERE username = <cfqueryparam value="#variables.fld_userName#" cfsqltype="cf_sql_varchar" /> AND pwd = <cfqueryparam value="#hash(variables.fld_userPwd,'SHA')#" cfsqltype="cf_sql_varchar" />
+			</cfquery>
+			<cfif local.checkLogin.recordcount EQ 1>
+				<cfset session.stLoggedInUser = {'userFullName' = local.checkLogin.fullname, 'userID' = local.checkLogin.userid} > 
+			<cfelse>
+				<cfset arrayAppend(errorMessage, 'Invalid User Login')>
+			</cfif>
+		</cfif>
+		<cfreturn variables.errorMessage />
 	</cffunction>
 
 	<cffunction name="createContact" access="public" output="false">
@@ -171,33 +169,33 @@
 	</cffunction>
 
 	 <cffunction name="getContacts" access="public" output="false" returntype="query">		
-		<cfquery name="qry.rs_getContacts">
+		<cfquery name="local.rs_getContacts">
 			SELECT * FROM contact WHERE user_id = <cfqueryparam value="#session.stLoggedInUser.userID#" cfsqltype="cf_sql_integer" /> ORDER BY contact_id
 		</cfquery>
-		<cfreturn qry.rs_getContacts />
+		<cfreturn local.rs_getContacts />
 	</cffunction>
 
 	<cffunction name="getContactsExcel" access="public" output="false" returntype="query">		
-		<cfquery name="qry.rs_getContacts">
+		<cfquery name="local.rs_getContacts">
 			SELECT firstname,contact_email,contact_phone,address,street,pincode FROM contact WHERE user_id = <cfqueryparam value="#session.stLoggedInUser.userID#" cfsqltype="cf_sql_integer" /> ORDER BY contact_id
 		</cfquery>
-		<cfreturn qry.rs_getContacts />
+		<cfreturn local.rs_getContacts />
 	</cffunction>
 
 	<cffunction name="getContactById" access="remote" output="false" returntype="any" returnformat="JSON">
 		<cfargument name="contact_id" required="yes">		
-		<cfquery name="qry.rs_getContactById">
+		<cfquery name="local.rs_getContactById">
 			SELECT * FROM contact  WHERE contact_id = <cfqueryparam value="#arguments.contact_id#" cfsqltype="cf_sql_integer" /> AND user_id = <cfqueryparam value="#session.stLoggedInUser.userID#" cfsqltype="cf_sql_integer" />
 		</cfquery>		
-		<cfreturn serializeJSON(qry.rs_getContactById,"struct") />
+		<cfreturn serializeJSON(local.rs_getContactById,"struct") />
 	</cffunction>
 
 	<cffunction name="getContactBy" access="remote" output="false" returntype="any" returnformat="JSON">
 		<cfargument name="contact_id" required="yes">		
-		<cfquery name="qry.rs_getContactBy">
+		<cfquery name="local.rs_getContactBy">
 			SELECT * FROM contact  WHERE contact_id = <cfqueryparam value="#arguments.contact_id#" cfsqltype="cf_sql_integer" /> AND user_id = <cfqueryparam value="#session.stLoggedInUser.userID#" cfsqltype="cf_sql_integer" />
 		</cfquery>		
-		<cfreturn serializeJSON(qry.rs_getContactBy,"struct") />
+		<cfreturn serializeJSON(local.rs_getContactBy,"struct") />
 	</cffunction>	
 
 	<cffunction name="updateUserImage" access="remote" output="false" >	
@@ -212,10 +210,10 @@
 	</cffunction>
 
 	<cffunction name="getUserImage" access="public" output="false" returntype="query">		
-		<cfquery name="qry.rs_getUserImage">
+		<cfquery name="local.rs_getUserImage">
 			SELECT image_name FROM users  WHERE userid = <cfqueryparam value="#session.stLoggedInUser.userID#" cfsqltype="cf_sql_integer" />
 		</cfquery>		
-		<cfreturn qry.rs_getUserImage />
+		<cfreturn local.rs_getUserImage />
 	</cffunction>
 
 	<cffunction name="getOrmContacts" access="public" returnType="any" output="true">              
