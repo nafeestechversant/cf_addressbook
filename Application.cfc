@@ -10,18 +10,26 @@
 	
 
     <!---OnApplicationStart() method--->
-	<cffunction name="onApplicationStart" returntype="boolean" >	
-		<cfset application.myglobalvariable = structNew()>
+	<cffunction name="onApplicationStart" returntype="boolean" >			
 		<cfreturn true />
 	</cffunction>
 
     <!---onRequestStart() method--->
 	<cffunction name="onRequestStart" returntype="boolean" >
 		<cfargument name="targetPage" type="string" required="true" />
+		<cfset variables.files = "index.cfm,contact_pdf.cfm,contact_excel.cfm,contact_print.cfm">
+		<cfif ListContains(variables.files, GetFileFromPath(CGI.CF_TEMPLATE_PATH)) AND NOT structKeyExists(session,'stLoggedInUser')>
+			<cflocation url = "login.cfm" addtoken="false" />
+		</cfif>
+		<cfif structKeyExists(URL,'logout')>
+			<cfset structdelete(session,'stLoggedInUser') />
+		</cfif>
 		<!---handle some special URL parameters--->
 		<cfif isDefined('url.restartApp')>
 			<cfset this.onApplicationStart() />
 		</cfif>		
 		<cfreturn true />
 	</cffunction>
+
+	
 </cfcomponent>
