@@ -56,22 +56,15 @@
                                         <div class="p-5">
                                             <div class="text-center">
                                                 <h1 class="h4 text-gray-900 mb-4">LOGIN</h1>
-                                            </div>
-                                            <cfif isDefined('errorMessage') AND errorMessage.len() >
-                                                <cfloop array="#errorMessage#" index="error">
-                                                <p class="alert alert-error">#error#</p>
-                                                </cfloop>
-                                            </cfif>
-                                            <cfif isDefined('errorMessage') AND NOT arrayIsEmpty(errorMessage)>            
-                                                <cfloop array="#errorMessage#" index="message">
+                                            </div>                                           
+                                            <cfif isDefined('session.errMsg') AND NOT arrayIsEmpty(session.errMsg)>            
+                                                <cfloop array="#session.errMsg#" index="message">
                                                     <p  class="red">#message#</p>
-                                                </cfloop>
-                                            <cfelseif isDefined('errorMessage') AND arrayIsEmpty(errorMessage)>
-                                                <cflocation url = "index.cfm">         
+                                                </cfloop>                                                   
                                             </cfif>
                                             <cfparam name="form.fld_userName"  default=""  type="string">
                                             <cfparam name="form.fld_userPwd"  default=""  type="string">
-                                            <form class="user" id="login_form" method="post" action="login.cfc?method=getLoginQuery">
+                                            <form class="user" id="login_form" method="post" action="cfscript-login.cfc?method=checkLogin">
                                                 <div class="form-group">
                                                     <input type="text" name="fld_userName" class="form-control form-control-user"
                                                         id="fld_userName" aria-describedby="emailHelp"
@@ -103,7 +96,7 @@
                 </div>
             </div>    
             <script src="vendor/jquery/jquery.min.js"></script>   
-<!---             <script src="js/jquery.validate.js"></script> --->
+            <script src="js/jquery.validate.js"></script>
             <script src="js/validation.js"></script>   
         </cfoutput>
     </body>
