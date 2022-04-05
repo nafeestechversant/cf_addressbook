@@ -1,14 +1,12 @@
+<cfobject component="login" name="contacts">
 <cfif structKeyExists(URL,'From')>
     <cfif URL.From IS "Delete">
-        <cfinvoke component="login" method="deleteContact"></cfinvoke>         
+        <cfinvoke component="#contacts#" method="deleteContact"></cfinvoke>         
     </cfif>
 </cfif>     
-<cfif structKeyExists(form,'submit_crteCon')>
-    <cfinvoke component="login" method="createContact" returnvariable="errorMessage"></cfinvoke>        
-</cfif>
-<cfinvoke component="login" method="getContacts" returnvariable="getContactLists"></cfinvoke>
-<cfinvoke component="login" method="getUserImage" returnvariable="getUsrImage"></cfinvoke>
-<cfinvoke component="login" method="getOrmContacts" returnvariable="ContactLists"></cfinvoke>
+<cfinvoke component="#contacts#" method="getContacts" returnvariable="getContactLists"></cfinvoke>
+<cfinvoke component="#contacts#" method="getUserImage" returnvariable="getUsrImage"></cfinvoke>
+<cfinvoke component="#contacts#" method="getOrmContacts" returnvariable="ContactLists"></cfinvoke>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -186,7 +184,7 @@
                                     <cfparam name="form.cont_pin" default=""  type="string">
                                     <cfparam name="form.cont_email" default=""  type="string">
                                     <cfparam name="form.cont_phone" default=""  type="string">
-                                    <form class="user" id="cre_contact" method="post" action="" enctype="multipart/form-data">                                            
+                                    <form class="user" id="cre_contact" method="post" action="login.cfc?method=createContact" enctype="multipart/form-data">                                            
                                         <input type="hidden" name="cont_id" id="cont_id" value="">
                                         <input type="hidden" name="cont_image" id="cont_image" value="">
                                         <div class="form-group row">
@@ -379,7 +377,7 @@
         </div>
         <!-- Bootstrap core JavaScript-->
         <script src="vendor/jquery/jquery.min.js"></script>
-        <script src="js/jquery.validate.js"></script>     
+<!---         <script src="js/jquery.validate.js"></script>      --->
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="js/contact.js"></script>      
     </cfoutput>

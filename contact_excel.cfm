@@ -1,4 +1,5 @@
-<cfinvoke component="login" method="getContactsExcel" returnvariable="getContactLists"></cfinvoke>
+<cfobject component="login" name="contactsExcel">
+<cfinvoke component="#contactsExcel#" method="getContactsExcel" returnvariable="getContactLists"></cfinvoke>
 <cfset variables.theSheet = SpreadsheetNew("ContactData")>
 <cfset SpreadsheetAddRow(variables.theSheet, "Name,Email,Phone,Address,Street,Pincode")>
 <cfset SpreadsheetAddRows(variables.theSheet,variables.getContactLists)>

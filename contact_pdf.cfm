@@ -1,4 +1,5 @@
-<cfinvoke component="login" method="getContacts" returnvariable="getContactLists"></cfinvoke>
+<cfobject component="login" name="contactsPdf">
+<cfinvoke component="#contactsPdf#" method="getContacts" returnvariable="getContactLists"></cfinvoke>
 <cfheader name="Content-Disposition" value="attachment; filename=myDoc.pdf">
     <cfcontent type="application/pdf">
     <cfdocument format="PDF">

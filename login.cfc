@@ -64,18 +64,26 @@
 			}
 			if(arrayIsEmpty(errorMessage)) 
 			{
-				myResult=QueryExecute(("SELECT * FROM users WHERE username=:username AND pwd=:pwd"),{username=fld_userName,pwd=fld_userPwd},
-       						{datasource="cf_addressbook"});
+				qService = new query(); 				
+				qService.setName("checkLogin"); 
+				qService.addParam(name="username", value="#trim(form.fld_userName)#", cfsqltype="cf_sql_varchar");
+				qService.addParam(name="pwd", value="#trim(form.fld_userPwd)#", cfsqltype="cf_sql_varchar");
+				qService.setSql("SELECT * FROM users WHERE username = :username AND pwd=:pwd");
+				results = qService.execute().getResult();
+				var result=qService.execute();
+            	var resultKey  = result.getPrefix().generatedkey;
+				// myResult=QueryExecute(("SELECT * FROM users WHERE username=:username AND pwd=:pwd"),{username=fld_userName,pwd=fld_userPwd},
+       			// 			{datasource="cf_addressbook"});
 			}
 			// if ( errorMessage.len() ) {							
 			// 	include "login.cfm";
 			// }
 									
 		</cfscript>	
-		<cfreturn />	
+		<cfreturn  results/>	
 	</cffunction>
 
-	<cffunction name="createContact" access="public" output="false">
+	<cffunction name="createContact" access="remote" output="false">
 		<cfset variables.errorMessage= arrayNew(1) />
 		<cfset variables.cont_title = form.cont_title/>
 		<cfset variables.cont_firstname = form.cont_firstname/>	
@@ -90,35 +98,38 @@
 		<cfset variables.cont_email = form.cont_email/>
 		<cfset variables.cont_phone = form.cont_phone/>		
 		<cfset variables.cont_id = form.cont_id/>
-		<cfif variables.cont_title EQ ''>
+		<cfif trim(variables.cont_title) EQ ''>
 			<cfset arrayAppend(errorMessage, 'Please Enter Title')>
 		</cfif>		
-		<cfif variables.cont_firstname EQ ''>
+		<cfif trim(variables.cont_firstname) EQ ''>
 			<cfset arrayAppend(errorMessage, 'Please Enter FirstName')>
 		</cfif>
-		<cfif variables.cont_lastname EQ ''>
+		<cfif trim(variables.cont_lastname) EQ ''>
 			<cfset arrayAppend(errorMessage, 'Please Enter LastName')>
 		</cfif>
-		<cfif variables.cont_gender EQ ''>
+		<cfif trim(variables.cont_gender) EQ ''>
 			<cfset arrayAppend(errorMessage, 'Please Enter Gender')>
 		</cfif>
-		<cfif variables.cont_dob EQ ''>
+		<cfif trim(variables.cont_dob) EQ ''>
 			<cfset arrayAppend(errorMessage, 'Please Enter Date of Birth')>
 		</cfif>
-		<cfif variables.cont_addr EQ ''>
+		<cfif trim(variables.cont_addr) EQ ''>
 			<cfset arrayAppend(errorMessage, 'Please Enter Address')>
 		</cfif>
-		<cfif variables.cont_street EQ ''>
+		<cfif trim(variables.cont_street) EQ ''>
 			<cfset arrayAppend(errorMessage, 'Please Enter Street')>
 		</cfif>
-		<cfif variables.cont_pin EQ ''>
+		<cfif trim(variables.cont_pin) EQ ''>
 			<cfset arrayAppend(errorMessage, 'Please Enter Pin')>
 		</cfif>
-		<cfif variables.cont_email EQ '' OR NOT isValid("eMail", variables.cont_email)>
+		<cfif trim(variables.cont_email) EQ '' OR NOT isValid("eMail", trim(variables.cont_email))>
 			<cfset arrayAppend(errorMessage, 'Please Enter valid Email')>
 		</cfif>		
-		<cfif variables.cont_phone EQ ''>
+		<cfif trim(variables.cont_phone) EQ ''>
 			<cfset arrayAppend(errorMessage, 'Please Enter Phone')>
+		</cfif>
+		<cfif NOT arrayIsEmpty(errorMessage)>
+			<cfset session.errMsgCont = errorMessage>
 		</cfif>
 		<cfset variables.cont_imge = variables.cont_image>
 		<cfif structKeyExists(form,"cont_photo") and len(trim(form.cont_photo))>
@@ -143,7 +154,8 @@
 						<cfqueryparam value="#variables.cont_email#" cfsqltype="cf_sql_varchar" />,
 						<cfqueryparam value="#variables.cont_phone#" cfsqltype="cf_sql_varchar" />					
 					)
-			</cfquery>			
+			</cfquery>
+			<cflocation url = "index.cfm" addtoken="false" />			
 		</cfif>
 		<cfif arrayIsEmpty(errorMessage) AND variables.cont_id NEQ ''>
 			<cfquery>
@@ -159,7 +171,8 @@
 				pincode = <cfqueryparam value="#variables.cont_pin#" cfsqltype="cf_sql_varchar" />,
 				contact_email = <cfqueryparam value="#variables.cont_email#" cfsqltype="cf_sql_varchar" />,
 				contact_phone  = <cfqueryparam value="#variables.cont_phone#" cfsqltype="cf_sql_varchar" /> WHERE contact_id = #variables.cont_id#	AND user_id = #session.stLoggedInUser.userID#			
-			</cfquery>			
+			</cfquery>
+			<cflocation url = "index.cfm" addtoken="false" />			
 		</cfif>
 		<cfreturn variables.errorMessage />						
 	</cffunction>

@@ -1,6 +1,3 @@
-<cfif structKeyExists(form,'fld_FormSubmit')>
-    <cfinvoke component="login" method="createUser" returnvariable="errorMessage"></cfinvoke>        
-</cfif>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -54,11 +51,11 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                                     </div>
-                                    <cfif isDefined('errorMessage') AND NOT arrayIsEmpty(errorMessage)>            
-                                        <cfloop array="#errorMessage#" index="message">
+                                    <cfif isDefined('session.errMsgReg') AND NOT arrayIsEmpty(session.errMsgReg)>            
+                                        <cfloop array="#session.errMsgReg#" index="message">
                                             <p  class="red">#message#</p>
                                         </cfloop>
-                                    <cfelseif isDefined('errorMessage') AND arrayIsEmpty(errorMessage)>
+                                    <cfelseif isDefined('session.errMsgReg') AND arrayIsEmpty(session.errMsgReg)>
                                         <p  class="green">User Registered successfully</p>       
                                     </cfif>
                                     <cfparam name="form.fld_fullName"  default=""  type="string">
@@ -66,7 +63,7 @@
                                     <cfparam name="form.fld_userName"  default=""  type="string">
                                     <cfparam name="form.fld_userPwd"  default=""  type="string">
                                     <cfparam name="form.fld_userCnfPwd"  default=""  type="string">
-                                    <form class="user" id="register_form" method="post" action="">
+                                    <form class="user" id="register_form" method="post" action="cfscript-login.cfc?method=createUser">
                                         <div class="form-group">                                    
                                             <input type="text" class="form-control form-control-user" name="fld_fullName" id="fld_fullName"
                                                 placeholder="Full Name">
